@@ -1,0 +1,113 @@
+# =============================
+# OS / IDE / Editor files
+# =============================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# =============================
+# Python cache
+# =============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.cache/
+.ipynb_checkpoints/
+
+# =============================
+# Environment & virtualenv
+# =============================
+env/
+venv/
+.venv/
+*.conda
+*.yml
+*.yaml
+
+# =============================
+# Model checkpoints, logs, outputs
+# =============================
+checkpoints/
+logs/
+runs/
+outputs/
+tensorboard/
+wandb/
+
+# =============================
+# Large model weights / pretrained LLMs
+# =============================
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+
+# HuggingFace cache
+~/.cache/huggingface/
+huggingface_cache/
+hf_cache/
+models/
+pretrained/
+pretrained_models/
+
+# =============================
+# MRI / Medical data
+# =============================
+raw_data/
+preprocessed_data/
+data/
+*.nii
+*.nii.gz
+*.mha
+*.h5
+*.npz
+*.mat
+*.tar
+*.tar.gz
+*.zip
+
+# =============================
+# HPC / GPU / CUDA / Slurm
+# =============================
+*.out
+*.err
+*.o
+*.e
+slurm-*.out
+slurm-*.err
+CUDA_CACHE/
+.nv/
+
+# =============================
+# Pip and build artifacts
+# =============================
+build/
+dist/
+*.whl
+
+# =============================
+# FastMRI generated data
+# =============================
+fastmri/
+fastMRI/
+fastmri_cache/
+multicoil/
+singlecoil/
+
+# =============================
+# Intermediate files
+# =============================
+tmp/
+temp/
+*.tmp
+
+# =============================
+# Jupyter notebook outputs
+# =============================
+*.ipynb_checkpoints/
+*.ipynb_tmp/
