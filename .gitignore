@@ -32,7 +32,7 @@ venv/
 # =============================
 # Model checkpoints, logs, outputs
 # =============================
-checkpoints/
+AutoRG_Brain/checkpoints/
 logs/
 runs/
 outputs/
