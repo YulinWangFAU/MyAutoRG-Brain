@@ -5,7 +5,8 @@ import torch.nn as nn
 from torch.nn import CrossEntropyLoss
 from torchinfo import summary
 from transformers import GPT2LMHeadModel,GPT2Config
-from transformers.generation_beam_search import BeamSearchScorer
+#from transformers.generation_beam_search import BeamSearchScorer
+from transformers import BeamSearchScorer
 
 import json
 
