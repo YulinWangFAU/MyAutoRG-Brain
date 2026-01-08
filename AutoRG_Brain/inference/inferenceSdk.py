@@ -124,7 +124,9 @@ class AutoRG_Brain():
                 mixed_precision=self.mixed_precision, modal=modal, eval_mode=self.eval_mode)
 
             region_features = torch.tensor(np.array([item.cpu().detach().numpy() for item in region_features]), dtype=torch.float32).to(self.trainer.llm_model.device)
-            
+            # 确认 region_features 的真实形态
+            print("region_features shape:", region_features.shape)
+            print("region_features device:", region_features.device)
             output = self.trainer.llm_model.generate(
                     region_features,
                     max_length=300,
