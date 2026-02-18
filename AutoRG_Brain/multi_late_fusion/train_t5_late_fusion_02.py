@@ -5,7 +5,7 @@ Created on 2026/2/18 11:29
 @author: Yulin Wang
 @email: yulin.wang@fau.de
 """
-# train_t5_late_fusion.py
+# train_t5_late_fusion_02.py
 
 import json
 import os
@@ -20,7 +20,9 @@ from transformers import (
 )
 import numpy as np
 import evaluate
-
+from transformers import EarlyStoppingCallback
+from transformers import set_seed
+set_seed(42)
 # ========================
 # 路径
 # ========================
@@ -74,8 +76,11 @@ class FusionDataset(Dataset):
             return_tensors="pt"
         )
 
+        labels_ids = labels["input_ids"].squeeze()
+        labels_ids[labels_ids == self.tokenizer.pad_token_id] = -100
+
         model_inputs = {k: v.squeeze() for k, v in model_inputs.items()}
-        model_inputs["labels"] = labels["input_ids"].squeeze()
+        model_inputs["labels"] = labels_ids
 
         return model_inputs
 
@@ -96,9 +101,13 @@ val_dataset = FusionDataset(val_data, tokenizer)
 rouge = evaluate.load("rouge")
 
 def compute_metrics(eval_pred):
-    predictions, labels = eval_pred
+    preds, labels = eval_pred
 
-    decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
+    if isinstance(preds, tuple):
+        preds = preds[0]
+
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
@@ -121,18 +130,23 @@ training_args = TrainingArguments(
     output_dir=OUTPUT_DIR,
     evaluation_strategy="epoch",
     save_strategy="epoch",
-    learning_rate=2e-4,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
-    num_train_epochs=25,
+    learning_rate=3e-4,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
+    gradient_accumulation_steps=2,
+    num_train_epochs=3,
     weight_decay=0.01,
     save_total_limit=2,
     load_best_model_at_end=True,
     metric_for_best_model="rouge1",
     greater_is_better=True,
     fp16=True,
+    predict_with_generate=True,  # 🔥 必须加
     logging_dir="/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/logs",
     logging_steps=10,
+    generation_max_length=256,
+    warmup_ratio=0.1,
+    report_to="tensorboard",  # ✅ 加这一行
 )
 
 # ========================
@@ -147,6 +161,7 @@ trainer = Trainer(
     tokenizer=tokenizer,
     data_collator=DataCollatorForSeq2Seq(tokenizer, model=model),
     compute_metrics=compute_metrics,
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
 )
 
 # ========================
@@ -159,3 +174,27 @@ trainer.train()
 trainer.save_model(OUTPUT_DIR)
 
 print("Training finished.")
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+logs = pd.DataFrame(trainer.state.log_history)
+
+if "step" not in logs.columns:
+    logs["step"] = range(len(logs))
+
+train_logs = logs[logs["loss"].notna()]
+eval_logs = logs[logs["eval_loss"].notna()]
+
+plt.figure()
+plt.plot(train_logs["step"], train_logs["loss"], label="train_loss")
+plt.plot(eval_logs["step"], eval_logs["eval_loss"], marker="o", label="val_loss")
+plt.xlabel("Step")
+plt.ylabel("Loss")
+plt.legend()
+plt.title("Training and Validation Loss")
+plt.grid(True)
+plt.savefig(os.path.join(OUTPUT_DIR, "loss_curve.png"))
+plt.close()
+
+logs.to_csv(os.path.join(OUTPUT_DIR, "training_logs.csv"), index=False)
