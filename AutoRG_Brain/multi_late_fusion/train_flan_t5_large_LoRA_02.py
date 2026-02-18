@@ -95,7 +95,15 @@ class FusionDataset(Dataset):
             padding=False,
         )
 
-        model_inputs["labels"] = labels["input_ids"]
+        labels_ids = labels["input_ids"]
+
+        # 🔥 关键：把 padding token 替换成 -100
+        labels_ids = [
+            (l if l != self.tokenizer.pad_token_id else -100)
+            for l in labels_ids
+        ]
+
+        model_inputs["labels"] = labels_ids
         return model_inputs
 
 
@@ -222,6 +230,9 @@ trainer = Seq2SeqTrainer(
 # ========================
 # Train
 # ========================
+batch = next(iter(trainer.get_train_dataloader()))
+outputs = model(**batch)
+print("Initial loss:", outputs.loss)
 
 trainer.train()
 
