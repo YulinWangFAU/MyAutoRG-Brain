@@ -141,13 +141,12 @@ training_args = TrainingArguments(
     metric_for_best_model="rouge1",
     greater_is_better=True,
     fp16=True,
-    predict_with_generate=True,  # 🔥 必须加
     logging_dir="/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/logs",
     logging_steps=10,
-    generation_max_length=256,
     warmup_ratio=0.1,
-    report_to="tensorboard",  # ✅ 加这一行
+    report_to="tensorboard",
 )
+
 
 # ========================
 # Trainer
@@ -161,8 +160,12 @@ trainer = Trainer(
     tokenizer=tokenizer,
     data_collator=DataCollatorForSeq2Seq(tokenizer, model=model),
     compute_metrics=compute_metrics,
-    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+    predict_with_generate=True,  # ✅ 加在这里
 )
+
+# 👇 加这一行
+trainer.args.generation_max_length = 256
 
 # ========================
 # 开始训练
