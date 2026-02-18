@@ -150,6 +150,8 @@ def compute_metrics(eval_pred):
     if isinstance(preds, tuple):
         preds = preds[0]
 
+    preds = np.clip(preds, 0, tokenizer.vocab_size - 1)
+
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
 
     decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
@@ -182,13 +184,13 @@ training_args = Seq2SeqTrainingArguments(
     output_dir=OUTPUT_DIR,
     evaluation_strategy="epoch",
     save_strategy="epoch",
-    learning_rate=5e-5,  # 🔥 more stable for large model
+    learning_rate=2e-5,  # 🔥 more stable for large model
     per_device_train_batch_size=4,
     per_device_eval_batch_size=4,
     gradient_accumulation_steps=2,
     num_train_epochs=20,
     weight_decay=0.01,
-    warmup_ratio=0.1,
+    # warmup_ratio=0.1,
     save_total_limit=2,
     load_best_model_at_end=True,
     metric_for_best_model="rouge1",
@@ -199,6 +201,7 @@ training_args = Seq2SeqTrainingArguments(
     report_to="tensorboard",
     predict_with_generate=True,
     generation_max_length=256,
+    max_grad_norm=1.0,
 )
 
 # ========================
