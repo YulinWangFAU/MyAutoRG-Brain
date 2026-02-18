@@ -104,12 +104,17 @@ rouge = evaluate.load("rouge")
 def compute_metrics(eval_pred):
     preds, labels = eval_pred
 
+    # 如果是 tuple，取第一个
     if isinstance(preds, tuple):
         preds = preds[0]
 
-    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+    # 把 preds 里非法值裁剪
+    preds = np.where(preds < 0, tokenizer.pad_token_id, preds)
 
+    # 处理 labels
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
     result = rouge.compute(
@@ -122,6 +127,7 @@ def compute_metrics(eval_pred):
         "rouge1": result["rouge1"],
         "rougeL": result["rougeL"]
     }
+
 
 # ========================
 # 训练参数
