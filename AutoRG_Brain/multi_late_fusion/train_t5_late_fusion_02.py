@@ -14,10 +14,11 @@ from torch.utils.data import Dataset
 from transformers import (
     T5Tokenizer,
     T5ForConditionalGeneration,
-    Trainer,
-    TrainingArguments,
+    Seq2SeqTrainer,
+    Seq2SeqTrainingArguments,
     DataCollatorForSeq2Seq
 )
+
 import numpy as np
 import evaluate
 from transformers import EarlyStoppingCallback
@@ -126,7 +127,7 @@ def compute_metrics(eval_pred):
 # 训练参数
 # ========================
 
-training_args = TrainingArguments(
+training_args = Seq2SeqTrainingArguments(
     output_dir=OUTPUT_DIR,
     evaluation_strategy="epoch",
     save_strategy="epoch",
@@ -145,16 +146,17 @@ training_args = TrainingArguments(
     logging_steps=10,
     warmup_ratio=0.1,
     report_to="tensorboard",
-    predict_with_generate=True,
-    generation_max_length=256,
+    predict_with_generate=True,      # ✅ 现在可以写
+    generation_max_length=256,       # ✅ 现在可以写
 )
+
 
 
 # ========================
 # Trainer
 # ========================
 
-trainer = Trainer(
+trainer = Seq2SeqTrainer(
     model=model,
     args=training_args,
     train_dataset=train_dataset,
@@ -164,6 +166,7 @@ trainer = Trainer(
     compute_metrics=compute_metrics,
     callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
 )
+
 
 
 
