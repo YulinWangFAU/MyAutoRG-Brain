@@ -186,12 +186,12 @@ trainer = Seq2SeqTrainer(
 trainer.train()
 print("Best model checkpoint:", trainer.state.best_model_checkpoint)
 print("Best metric:", trainer.state.best_metric)
-print("Best epoch:", trainer.state.best_epoch)
+print("Best step:", trainer.state.best_model_checkpoint.split("-")[-1])
 
 with open(os.path.join(OUTPUT_DIR, "best_result.txt"), "w") as f:
     f.write(f"Best checkpoint: {trainer.state.best_model_checkpoint}\n")
     f.write(f"Best metric: {trainer.state.best_metric}\n")
-    f.write(f"Best epoch: {trainer.state.best_epoch}\n")
+    f.write(f"Best step: {trainer.state.best_model_checkpoint.split('-')[-1]}\n")
 # 保存最佳模型
 trainer.save_model(OUTPUT_DIR)
 
