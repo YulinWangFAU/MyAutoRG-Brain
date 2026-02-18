@@ -145,6 +145,8 @@ training_args = TrainingArguments(
     logging_steps=10,
     warmup_ratio=0.1,
     report_to="tensorboard",
+    predict_with_generate=True,
+    generation_max_length=256,
 )
 
 
@@ -163,9 +165,6 @@ trainer = Trainer(
     callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
 )
 
-# 👇 加这一行
-trainer.args.predict_with_generate = True
-trainer.args.generation_max_length = 256
 
 
 # ========================
