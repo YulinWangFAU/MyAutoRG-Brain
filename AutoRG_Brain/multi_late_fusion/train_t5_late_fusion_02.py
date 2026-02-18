@@ -30,7 +30,10 @@ set_seed(42)
 
 TRAIN_PATH = "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/late_fusion_train.json"
 VAL_PATH = "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/late_fusion_val.json"
-OUTPUT_DIR = "/home/woody/iwi5/iwi5325h/t5_late_fusion_model"
+#OUTPUT_DIR = "/home/woody/iwi5/iwi5325h/t5_late_fusion_model"
+from datetime import datetime
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+OUTPUT_DIR = f"/home/woody/iwi5/iwi5325h/t5_late_fusion_model_{timestamp}"
 
 # ========================
 # 读取数据
@@ -141,7 +144,7 @@ training_args = Seq2SeqTrainingArguments(
     per_device_train_batch_size=4,
     per_device_eval_batch_size=4,
     gradient_accumulation_steps=2,
-    num_train_epochs=3,
+    num_train_epochs=20,
     weight_decay=0.01,
     save_total_limit=2,
     load_best_model_at_end=True,
@@ -181,7 +184,14 @@ trainer = Seq2SeqTrainer(
 # ========================
 
 trainer.train()
+print("Best model checkpoint:", trainer.state.best_model_checkpoint)
+print("Best metric:", trainer.state.best_metric)
+print("Best epoch:", trainer.state.best_epoch)
 
+with open(os.path.join(OUTPUT_DIR, "best_result.txt"), "w") as f:
+    f.write(f"Best checkpoint: {trainer.state.best_model_checkpoint}\n")
+    f.write(f"Best metric: {trainer.state.best_metric}\n")
+    f.write(f"Best epoch: {trainer.state.best_epoch}\n")
 # 保存最佳模型
 trainer.save_model(OUTPUT_DIR)
 
