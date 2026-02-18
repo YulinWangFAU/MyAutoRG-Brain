@@ -161,11 +161,12 @@ trainer = Trainer(
     data_collator=DataCollatorForSeq2Seq(tokenizer, model=model),
     compute_metrics=compute_metrics,
     callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
-    predict_with_generate=True,  # ✅ 加在这里
 )
 
 # 👇 加这一行
+trainer.args.predict_with_generate = True
 trainer.args.generation_max_length = 256
+
 
 # ========================
 # 开始训练
