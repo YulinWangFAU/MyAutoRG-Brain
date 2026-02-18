@@ -142,7 +142,7 @@ data_collator = DataCollatorForSeq2Seq(
 # ========================
 
 rouge = evaluate.load("rouge")
-bertscore = evaluate.load("bertscore")
+# bertscore = evaluate.load("bertscore")
 
 def compute_metrics(eval_pred):
     preds, labels = eval_pred
@@ -161,16 +161,16 @@ def compute_metrics(eval_pred):
         use_stemmer=True,
     )
 
-    bert_result = bertscore.compute(
-        predictions=decoded_preds,
-        references=decoded_labels,
-        lang="en",
-    )
+    # bert_result = bertscore.compute(
+    #     predictions=decoded_preds,
+    #     references=decoded_labels,
+    #     lang="en",
+    # )
 
     return {
         "rouge1": rouge_result["rouge1"],
         "rougeL": rouge_result["rougeL"],
-        "bertscore_f1": np.mean(bert_result["f1"]),
+        # "bertscore_f1": np.mean(bert_result["f1"]),
     }
 
 
