@@ -119,7 +119,7 @@ print("\n=================================================\n")
 # Save Results
 # =========================
 
-df.to_csv("evaluation_results.csv")
+df.to_csv("evaluation_results_modal_test_gt.csv")
 
 # Also save markdown table (论文可直接用)
 with open("evaluation_results.md", "w") as f:
