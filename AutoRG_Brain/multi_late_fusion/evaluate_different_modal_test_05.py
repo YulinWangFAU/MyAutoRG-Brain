@@ -19,7 +19,7 @@ import evaluate
 from sacrebleu import corpus_bleu
 from bert_score import score as bertscore
 import torch
-
+import os
 # -*- coding: utf-8 -*-
 """
 Evaluate prediction files and print formatted comparison table
@@ -118,11 +118,11 @@ print("\n=================================================\n")
 # =========================
 # Save Results
 # =========================
-
-df.to_csv("evaluation_results_modal_test_gt.csv")
+OUTPUT_DIR = "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_20260218_234219"
+df.to_csv(os.path.join(OUTPUT_DIR,"evaluation_results_modal_test_gt.csv"))
 
 # Also save markdown table (论文可直接用)
-with open("evaluation_results.md", "w") as f:
+with open(os.path.join(OUTPUT_DIR,"evaluation_results_modal_test_gt.md"), "w") as f:
     f.write(df.to_markdown())
 
 print("Results saved to evaluation_results.csv and evaluation_results.md")
