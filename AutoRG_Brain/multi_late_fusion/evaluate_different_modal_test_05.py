@@ -40,8 +40,8 @@ import pandas as pd
 # =========================
 
 PREDICTION_FILES = {
-    "T5-Small": "/path/to/t5_small/test_predictions.json",
-    "Flan-T5-Large-LoRA": "/path/to/flan_large/test_predictions.json"
+    "T5-Small": "/home/woody/iwi5/iwi5325h/t5_late_fusion_model_20260218_151904/test_predictions_late_fusion_inputGTmodal.json",
+    "Flan-T5-Large-LoRA": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_20260218_234219/test_predictions_late_fusion_inputGTmodal.json"
 }
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
