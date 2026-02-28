@@ -127,31 +127,39 @@ class MultiModalCollator:
 
     def __call__(self, features):
 
-        # 先处理主输入 + labels
-        batch = self.seq2seq_collator(features)
+        # ===== 1️⃣ 先分离主输入 =====
+        main_features = []
+        modal_storage = {modal: [] for modal in ["t1_text", "t2_text", "flair_text", "t1c_text"]}
 
-        # 再单独 pad modal
-        for modal in ["t1_text", "t2_text", "flair_text", "t1c_text"]:
+        for f in features:
+            # 只保留主输入 + labels
+            main_features.append({
+                "input_ids": f["input_ids"],
+                "attention_mask": f["attention_mask"],
+                "labels": f["labels"]
+            })
 
-            ids_key = f"{modal}_ids"
-            mask_key = f"{modal}_mask"
+            # 存 modal
+            for modal in modal_storage.keys():
+                modal_storage[modal].append({
+                    "input_ids": f[f"{modal}_ids"],
+                    "attention_mask": f[f"{modal}_mask"]
+                })
 
-            modal_features = [
-                {
-                    "input_ids": f[ids_key],
-                    "attention_mask": f[mask_key]
-                }
-                for f in features
-            ]
+        # ===== 2️⃣ 主输入 pad =====
+        batch = self.seq2seq_collator(main_features)
+
+        # ===== 3️⃣ modal 单独 pad =====
+        for modal in modal_storage.keys():
 
             modal_batch = self.tokenizer.pad(
-                modal_features,
+                modal_storage[modal],
                 padding=True,
                 return_tensors="pt"
             )
 
-            batch[ids_key] = modal_batch["input_ids"]
-            batch[mask_key] = modal_batch["attention_mask"]
+            batch[f"{modal}_ids"] = modal_batch["input_ids"]
+            batch[f"{modal}_mask"] = modal_batch["attention_mask"]
 
         return batch
 
