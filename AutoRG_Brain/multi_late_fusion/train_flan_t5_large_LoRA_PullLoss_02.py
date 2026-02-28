@@ -215,6 +215,9 @@ def compute_metrics(eval_pred):
     if isinstance(preds, tuple):
         preds = preds[0]
 
+    # 🔥 修复非法 token id
+    preds = np.where(preds < tokenizer.vocab_size, preds, tokenizer.pad_token_id)
+
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
 
     decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
