@@ -241,7 +241,26 @@ def compute_metrics(eval_pred):
 # Trainer with Multi-Positive Contrastive
 # ========================
 class MultiModalTrainer(Seq2SeqTrainer):
+    def prediction_step(
+            self,
+            model,
+            inputs,
+            prediction_loss_only,
+            ignore_keys=None,
+    ):
 
+        # 🔥 删除 modal 字段
+        inputs = inputs.copy()
+        for key in list(inputs.keys()):
+            if key.startswith("t1_") or key.startswith("t2_") or key.startswith("flair_") or key.startswith("t1c_"):
+                inputs.pop(key)
+
+        return super().prediction_step(
+            model,
+            inputs,
+            prediction_loss_only,
+            ignore_keys
+        )
     def masked_mean(self, hidden, mask):
         mask = mask.unsqueeze(-1)
         summed = (hidden * mask).sum(dim=1)
@@ -309,9 +328,12 @@ class MultiModalTrainer(Seq2SeqTrainer):
         denominator = torch.logsumexp(logits, dim=1)
 
         contrastive_loss = -(numerator - denominator).mean()
-
+        if torch.isnan(contrastive_loss):
+            print("⚠️ Contrastive loss is NaN")
+        if torch.isnan(lm_loss):
+            print("⚠️ LM loss is NaN")
         total_loss = lm_loss + lambda_contrast * contrastive_loss
-
+        print("LM:", lm_loss.item(), "Contrast:", contrastive_loss.item())
         return (total_loss, outputs) if return_outputs else total_loss
 # ========================
 # Training Arguments
