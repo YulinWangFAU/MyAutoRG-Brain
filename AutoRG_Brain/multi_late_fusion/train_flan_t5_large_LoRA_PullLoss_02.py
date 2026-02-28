@@ -34,7 +34,8 @@ from transformers import (
 )
 
 from peft import LoraConfig, get_peft_model, TaskType
-
+from dataclasses import dataclass
+from typing import List, Dict
 # ========================
 # Reproducibility
 # ========================
@@ -77,13 +78,15 @@ class FusionDataset(Dataset):
     def __getitem__(self, idx):
         sample = self.data[idx]
 
+        # 主输入
         model_inputs = self.tokenizer(
             sample["input_text"],
             max_length=self.max_input_len,
             truncation=True,
-            padding=False,  # 🔥 dynamic padding
+            padding=False,
         )
 
+        # target
         labels = self.tokenizer(
             sample["target_text"],
             max_length=self.max_output_len,
@@ -91,24 +94,65 @@ class FusionDataset(Dataset):
             padding=False,
         )
 
-        labels_ids = labels["input_ids"]
-
-        # 🔥 关键：把 padding token 替换成 -100
         labels_ids = [
             (l if l != self.tokenizer.pad_token_id else -100)
-            for l in labels_ids
+            for l in labels["input_ids"]
         ]
 
         model_inputs["labels"] = labels_ids
 
-        # 🔥 新增：保存原始文本用于 pull loss
-        model_inputs["t1_text"] = sample["t1_text"]
-        model_inputs["t2_text"] = sample["t2_text"]
-        model_inputs["flair_text"] = sample["flair_text"]
-        model_inputs["t1c_text"] = sample["t1c_text"]
-        model_inputs["target_text_raw"] = sample["target_text"]
+        # 🔥 关键：预 tokenize 每个 modal
+        for modal_key in ["t1_text", "t2_text", "flair_text", "t1c_text"]:
+
+            modal_tok = self.tokenizer(
+                sample[modal_key],
+                max_length=256,
+                truncation=True,
+                padding=False,
+            )
+
+            model_inputs[f"{modal_key}_ids"] = modal_tok["input_ids"]
+            model_inputs[f"{modal_key}_mask"] = modal_tok["attention_mask"]
 
         return model_inputs
+
+# ========================
+# Custom Collator
+# ========================
+@dataclass
+class MultiModalCollator:
+    tokenizer: T5Tokenizer
+
+    def __call__(self, features: List[Dict]):
+
+        batch = self.tokenizer.pad(
+            features,
+            padding=True,
+            return_tensors="pt"
+        )
+
+        for modal in ["t1_text", "t2_text", "flair_text", "t1c_text"]:
+            ids_key = f"{modal}_ids"
+            mask_key = f"{modal}_mask"
+
+            modal_features = [
+                {
+                    "input_ids": f[ids_key],
+                    "attention_mask": f[mask_key]
+                }
+                for f in features
+            ]
+
+            modal_batch = self.tokenizer.pad(
+                modal_features,
+                padding=True,
+                return_tensors="pt"
+            )
+
+            batch[ids_key] = modal_batch["input_ids"]
+            batch[mask_key] = modal_batch["attention_mask"]
+
+        return batch
 
 
 # ========================
@@ -127,13 +171,16 @@ model = T5ForConditionalGeneration.from_pretrained(model_name)
 lora_config = LoraConfig(
     r=16,
     lora_alpha=32,
-    target_modules=["q", "v"],  # Verified for T5
+    target_modules=["q", "v"],
     lora_dropout=0.1,
     bias="none",
     task_type=TaskType.SEQ_2_SEQ_LM,
 )
 
 model = get_peft_model(model, lora_config)
+for name, param in model.named_parameters():
+    if param.requires_grad:
+        print(name)
 model.print_trainable_parameters()
 
 # ========================
@@ -143,11 +190,7 @@ model.print_trainable_parameters()
 train_dataset = FusionDataset(train_data, tokenizer)
 val_dataset = FusionDataset(val_data, tokenizer)
 
-data_collator = DataCollatorForSeq2Seq(
-    tokenizer=tokenizer,
-    model=model,
-    padding=True,
-)
+data_collator = MultiModalCollator(tokenizer)
 
 # ========================
 # Metrics
@@ -161,8 +204,6 @@ def compute_metrics(eval_pred):
 
     if isinstance(preds, tuple):
         preds = preds[0]
-
-    preds = np.clip(preds, 0, tokenizer.vocab_size - 1)
 
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
 
@@ -187,6 +228,100 @@ def compute_metrics(eval_pred):
         # "bertscore_f1": np.mean(bert_result["f1"]),
     }
 
+# ========================
+# Trainer with Multi-Positive Contrastive
+# ========================
+class MultiModalTrainer(Seq2SeqTrainer):
+    def masked_mean(self, hidden, mask):
+        mask = mask.unsqueeze(-1)  # [B, L, 1]
+        summed = (hidden * mask).sum(dim=1)
+        counts = mask.sum(dim=1).clamp(min=1e-6)
+        return summed / counts
+    def compute_loss(self, model, inputs, return_outputs=False):
+
+        device = model.device
+        tau = 0.1
+        lambda_contrast = 0.05
+
+        # ===== LM Loss =====
+        outputs = model(
+            input_ids=inputs["input_ids"],
+            attention_mask=inputs["attention_mask"],
+            labels=inputs["labels"],
+        )
+        lm_loss = outputs.loss
+
+        encoder = model.get_encoder()
+
+        # ===== Global embedding =====
+        global_enc = encoder(
+            input_ids=inputs["input_ids"],
+            attention_mask=inputs["attention_mask"]
+        )
+
+        z_global = self.masked_mean(
+            global_enc.last_hidden_state,
+            inputs["attention_mask"]
+        )
+
+        z_global = F.normalize(z_global, dim=-1)
+
+        # ===== Modal embeddings =====
+        modal_list = ["t1_text", "t2_text", "flair_text", "t1c_text"]
+        modal_embeds = []
+
+        for modal in modal_list:
+            enc_out = encoder(
+                input_ids=inputs[f"{modal}_ids"],
+                attention_mask=inputs[f"{modal}_mask"]
+            )
+            z_modal = self.masked_mean(
+                enc_out.last_hidden_state,
+                inputs[f"{modal}_mask"]
+            )
+            z_modal = F.normalize(z_modal, dim=-1)
+            modal_embeds.append(z_modal)
+
+        modal_embeds = torch.stack(modal_embeds, dim=1)
+        B, M, D = modal_embeds.shape
+        modal_flat = modal_embeds.view(B * M, D)
+
+        # ===== Similarity matrix =====
+        logits_g2m = torch.matmul(z_global, modal_flat.T) / tau  # [B , B*M]
+
+        # ===== Positive mask (global → modal) =====
+        mask = torch.zeros_like(logits_g2m, dtype=torch.bool)
+
+        indices = torch.arange(B, device=device)
+        mask = torch.zeros(B, B * M, device=device, dtype=torch.bool)
+        for i in range(B):
+            mask[i, i * M:(i + 1) * M] = True
+
+        logits_pos = logits_g2m.masked_fill(~mask, float('-inf'))
+
+        numerator = torch.logsumexp(logits_pos, dim=1)
+        denominator = torch.logsumexp(logits_g2m, dim=1)
+
+        loss_g2m = -(numerator - denominator).mean()
+
+        # ===== modal → global =====
+        logits_m2g = torch.matmul(modal_flat, z_global.T) / tau  # [B*M , B]
+
+        labels = torch.arange(B).to(device).repeat_interleave(M)
+
+        loss_m2g = F.cross_entropy(logits_m2g, labels)
+
+        # ===== Final contrastive loss =====
+        contrastive_loss = (loss_g2m + loss_m2g) / 2
+
+        total_loss = lm_loss + lambda_contrast * contrastive_loss
+
+        self.log({
+            "lm_loss": lm_loss.detach().cpu().item(),
+            "contrastive_loss": contrastive_loss.detach().cpu().item()
+        })
+
+        return (total_loss, outputs) if return_outputs else total_loss
 
 # ========================
 # Training Arguments
@@ -197,9 +332,9 @@ training_args = Seq2SeqTrainingArguments(
     evaluation_strategy="epoch",
     save_strategy="epoch",
     learning_rate=2e-5,  # 🔥 more stable for large model
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=4,
-    gradient_accumulation_steps=2,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    gradient_accumulation_steps=4,
     num_train_epochs=20,
     weight_decay=0.01,
     # warmup_ratio=0.1,
@@ -207,7 +342,8 @@ training_args = Seq2SeqTrainingArguments(
     load_best_model_at_end=True,
     metric_for_best_model="rouge1",
     greater_is_better=True,
-    fp16=False,
+    #bf16=True,
+    fp16=True,
     logging_steps=20,
     logging_dir=os.path.join(OUTPUT_DIR, "logs"),
     report_to="tensorboard",
@@ -219,68 +355,6 @@ training_args = Seq2SeqTrainingArguments(
 # ========================
 # Trainer
 # ========================
-class MultiModalTrainer(Seq2SeqTrainer):
-    def compute_loss(self, model, inputs, return_outputs=False):
-
-        # 🔥 先取出模态文本
-        t1_text = inputs.pop("t1_text")
-        t2_text = inputs.pop("t2_text")
-        flair_text = inputs.pop("flair_text")
-        t1c_text = inputs.pop("t1c_text")
-        target_text_raw = inputs.pop("target_text_raw")
-
-        # ===== LM LOSS =====
-        outputs = model(**inputs)
-        lm_loss = outputs.loss
-
-        # ===== MULTI-MODAL PULL LOSS =====
-
-        device = model.device
-
-        modal_texts = [t1_text, t2_text, flair_text, t1c_text]
-        modal_embeds = []
-
-        for modal in modal_texts:
-            tokenized = tokenizer(
-                modal,
-                padding=True,
-                truncation=True,
-                return_tensors="pt",
-            ).to(device)
-
-            modal_output = model.base_model.encoder(**tokenized)
-            modal_embed = modal_output.last_hidden_state.mean(dim=1)
-            modal_embeds.append(modal_embed)
-
-        modal_embeds = torch.stack(modal_embeds, dim=1)
-        modal_mean = modal_embeds.mean(dim=1)
-
-        # encode global target
-        global_tok = tokenizer(
-            target_text_raw,
-            padding=True,
-            truncation=True,
-            return_tensors="pt",
-        ).to(device)
-
-        global_output = model.base_model.encoder(**global_tok)
-        global_embed = global_output.last_hidden_state.mean(dim=1)
-
-        # cosine pull loss
-        pull_loss = 0
-        for i in range(4):
-            pull_loss += 1 - F.cosine_similarity(
-                global_embed,
-                modal_embeds[:, i, :],
-                dim=-1
-            ).mean()
-
-        pull_loss = pull_loss / 4
-
-        # ===== TOTAL LOSS =====
-        total_loss = lm_loss + 0.1 * pull_loss
-
-        return (total_loss, outputs) if return_outputs else total_loss
 
 trainer = MultiModalTrainer(
     model=model,
@@ -296,10 +370,6 @@ trainer = MultiModalTrainer(
 # ========================
 # Train
 # ========================
-batch = next(iter(trainer.get_train_dataloader()))
-outputs = model(**batch)
-print("Initial loss:", outputs.loss)
-
 trainer.train()
 
 best_ckpt = trainer.state.best_model_checkpoint
