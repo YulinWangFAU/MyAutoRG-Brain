@@ -241,97 +241,78 @@ def compute_metrics(eval_pred):
 # Trainer with Multi-Positive Contrastive
 # ========================
 class MultiModalTrainer(Seq2SeqTrainer):
+
     def masked_mean(self, hidden, mask):
-        mask = mask.unsqueeze(-1)  # [B, L, 1]
+        mask = mask.unsqueeze(-1)
         summed = (hidden * mask).sum(dim=1)
         counts = mask.sum(dim=1).clamp(min=1e-6)
         return summed / counts
+
     def compute_loss(self, model, inputs, return_outputs=False):
 
-        device = model.device
         tau = 0.1
         lambda_contrast = 0.05
 
-        # ===== LM Loss =====
+        # ===== 1️⃣ Full forward (带梯度) =====
         outputs = model(
             input_ids=inputs["input_ids"],
             attention_mask=inputs["attention_mask"],
             labels=inputs["labels"],
+            return_dict=True
         )
+
         lm_loss = outputs.loss
 
-        encoder = model.get_encoder()
-
-        # ===== Global embedding =====
-        global_enc = encoder(
-            input_ids=inputs["input_ids"],
-            attention_mask=inputs["attention_mask"]
-        )
+        # ===== 2️⃣ global embedding（复用 encoder_hidden）=====
+        encoder_hidden = outputs.encoder_last_hidden_state
 
         z_global = self.masked_mean(
-            global_enc.last_hidden_state,
+            encoder_hidden,
             inputs["attention_mask"]
         )
-
         z_global = F.normalize(z_global, dim=-1)
 
-        # ===== Modal embeddings =====
+        # ===== 3️⃣ modal embedding（no_grad）=====
+        encoder = model.get_encoder()
         modal_list = ["t1_text", "t2_text", "flair_text", "t1c_text"]
         modal_embeds = []
 
-        for modal in modal_list:
-            enc_out = encoder(
-                input_ids=inputs[f"{modal}_ids"],
-                attention_mask=inputs[f"{modal}_mask"]
-            )
-            z_modal = self.masked_mean(
-                enc_out.last_hidden_state,
-                inputs[f"{modal}_mask"]
-            )
-            z_modal = F.normalize(z_modal, dim=-1)
-            modal_embeds.append(z_modal)
+        with torch.no_grad():
+            for modal in modal_list:
+                enc_out = encoder(
+                    input_ids=inputs[f"{modal}_ids"],
+                    attention_mask=inputs[f"{modal}_mask"]
+                )
+
+                z_modal = self.masked_mean(
+                    enc_out.last_hidden_state,
+                    inputs[f"{modal}_mask"]
+                )
+
+                z_modal = F.normalize(z_modal, dim=-1)
+                modal_embeds.append(z_modal)
 
         modal_embeds = torch.stack(modal_embeds, dim=1)
         B, M, D = modal_embeds.shape
         modal_flat = modal_embeds.view(B * M, D)
 
-        # ===== Similarity matrix =====
-        logits_g2m = torch.matmul(z_global, modal_flat.T) / tau  # [B , B*M]
+        # ===== 4️⃣ 只做 global → modal =====
+        logits = torch.matmul(z_global, modal_flat.T) / tau
 
-        # ===== Positive mask (global → modal) =====
-        mask = torch.zeros_like(logits_g2m, dtype=torch.bool)
-
-        indices = torch.arange(B, device=device)
-        mask = torch.zeros(B, B * M, device=device, dtype=torch.bool)
+        mask = torch.zeros(B, B*M, device=z_global.device, dtype=torch.bool)
         for i in range(B):
-            mask[i, i * M:(i + 1) * M] = True
+            mask[i, i*M:(i+1)*M] = True
 
-        logits_pos = logits_g2m.masked_fill(~mask, float('-inf'))
+        logits_pos = logits.masked_fill(~mask, float('-inf'))
 
         numerator = torch.logsumexp(logits_pos, dim=1)
-        denominator = torch.logsumexp(logits_g2m, dim=1)
+        denominator = torch.logsumexp(logits, dim=1)
 
-        loss_g2m = -(numerator - denominator).mean()
-
-        # ===== modal → global =====
-        logits_m2g = torch.matmul(modal_flat, z_global.T) / tau  # [B*M , B]
-
-        labels = torch.arange(B).to(device).repeat_interleave(M)
-
-        loss_m2g = F.cross_entropy(logits_m2g, labels)
-
-        # ===== Final contrastive loss =====
-        contrastive_loss = (loss_g2m + loss_m2g) / 2
+        contrastive_loss = -(numerator - denominator).mean()
 
         total_loss = lm_loss + lambda_contrast * contrastive_loss
 
-        self.log({
-            "lm_loss": lm_loss.detach().cpu().item(),
-            "contrastive_loss": contrastive_loss.detach().cpu().item()
-        })
-
         return (total_loss, outputs) if return_outputs else total_loss
-
 # ========================
 # Training Arguments
 # ========================
