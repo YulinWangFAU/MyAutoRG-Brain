@@ -172,7 +172,8 @@ model_name = "google/flan-t5-large"
 
 tokenizer = T5Tokenizer.from_pretrained(model_name)
 model = T5ForConditionalGeneration.from_pretrained(model_name)
-
+# 🔥 必须加这一行（放在 LoRA 之前或之后都可以）
+model.config.use_cache = False
 # ========================
 # LoRA Config
 # ========================
@@ -356,7 +357,7 @@ training_args = Seq2SeqTrainingArguments(
     greater_is_better=True,
     fp16=False,
     bf16=False,
-    gradient_checkpointing=True,
+    gradient_checkpointing=False,
     logging_steps=20,
     logging_dir=os.path.join(OUTPUT_DIR, "logs"),
     report_to="tensorboard",
