@@ -94,12 +94,7 @@ class FusionDataset(Dataset):
             padding=False,
         )
 
-        labels_ids = [
-            (l if l != self.tokenizer.pad_token_id else -100)
-            for l in labels["input_ids"]
-        ]
-
-        model_inputs["labels"] = labels_ids
+        model_inputs["labels"] = labels["input_ids"]
 
         # 🔥 关键：预 tokenize 每个 modal
         for modal_key in ["t1_text", "t2_text", "flair_text", "t1c_text"]:
@@ -123,15 +118,21 @@ class FusionDataset(Dataset):
 class MultiModalCollator:
     tokenizer: T5Tokenizer
 
-    def __call__(self, features: List[Dict]):
-
-        batch = self.tokenizer.pad(
-            features,
-            padding=True,
-            return_tensors="pt"
+    def __post_init__(self):
+        self.seq2seq_collator = DataCollatorForSeq2Seq(
+            tokenizer=self.tokenizer,
+            model=None,
+            padding=True
         )
 
+    def __call__(self, features):
+
+        # 先处理主输入 + labels
+        batch = self.seq2seq_collator(features)
+
+        # 再单独 pad modal
         for modal in ["t1_text", "t2_text", "flair_text", "t1c_text"]:
+
             ids_key = f"{modal}_ids"
             mask_key = f"{modal}_mask"
 
