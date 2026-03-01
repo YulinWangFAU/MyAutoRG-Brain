@@ -1,14 +1,18 @@
+
 # -*- coding: utf-8 -*-
 """
-Final Evaluation Script (Medical Report Generation)
+Final Evaluation Script (Medical Report Generation - Research Grade)
 
 Metrics:
 - BLEU-2
+- BLEU-4
 - ROUGE-1
 - METEOR
 - BERTScore-F1
-- RadGraph (Overall, Entity, Relation)
-- RadCliQ (Composite, lower is better)
+- RadGraph (micro: overall, entity, relation)
+- RadCliQ (heuristic composite, lower better)
+- Bootstrap 95% CI
+- Paired Significance Test
 
 Author: Yulin Wang
 """
@@ -21,7 +25,13 @@ from bert_score import score as bertscore
 import torch
 import os
 import pandas as pd
-from radgraph import RadGraph
+from radgraph import F1RadGraph
+from scipy import stats
+from tqdm import tqdm
+
+# =========================
+# Config
+# =========================
 
 # =========================
 # Prediction Files
@@ -34,6 +44,12 @@ PREDICTION_FILES = {
 }
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+BERT_BATCH_SIZE = 16
+BOOTSTRAP_SAMPLES = 1000
+RANDOM_SEED = 42
+
+np.random.seed(RANDOM_SEED)
+
 print("Using device:", DEVICE)
 
 # =========================
@@ -42,64 +58,43 @@ print("Using device:", DEVICE)
 
 rouge = evaluate.load("rouge")
 meteor = evaluate.load("meteor")
-bleu_metric = BLEU(max_ngram_order=2)
+bleu2_metric = BLEU(max_ngram_order=2)
+bleu4_metric = BLEU(max_ngram_order=4)
 
-# Initialize RadGraph
-radgraph_model = RadGraph(device=DEVICE)
-
-# =========================
-# RadGraph Evaluation
-# =========================
-from radgraph import RadGraph
-from radgraph.metrics import compute_f1
-import numpy as np
-
-radgraph_model = RadGraph(device=DEVICE)
-
-def compute_radgraph(predictions, references):
-
-    # Step 1: Parse
-    pred_graphs = radgraph_model(predictions)
-    ref_graphs = radgraph_model(references)
-
-    # Step 2: Compute F1
-    entity_scores = []
-    relation_scores = []
-
-    for pred, ref in zip(pred_graphs, ref_graphs):
-
-        scores = compute_f1(pred, ref)
-
-        entity_scores.append(scores["entity_f1"])
-        relation_scores.append(scores["relation_f1"])
-
-    entity_f1 = np.mean(entity_scores)
-    relation_f1 = np.mean(relation_scores)
-    overall_f1 = (entity_f1 + relation_f1) / 2
-
-    return entity_f1, relation_f1, overall_f1
+f1radgraph = F1RadGraph(
+    reward_level="all",
+    model_type="modern-radgraph-xl",
+    device=DEVICE
+)
 
 # =========================
-# RadCliQ Evaluation
+# RadCliQ (Heuristic Version)
 # =========================
 
 def compute_radcliq(radgraph_f1, bert_f1, bleu2):
-
-    # Normalize BLEU (0-100 → 0-1)
     bleu_norm = bleu2 / 100.0
-
-    # Composite formula (论文近似权重版本)
-    radcliq_score = 1 - (
+    return 1 - (
         0.35 * radgraph_f1 +
         0.30 * bert_f1 +
         0.35 * bleu_norm
     )
 
-    return radcliq_score
+# =========================
+# Bootstrap CI
+# =========================
 
+def bootstrap_ci(metric_values, n_samples=1000):
+    means = []
+    n = len(metric_values)
+    for _ in range(n_samples):
+        sample = np.random.choice(metric_values, size=n, replace=True)
+        means.append(np.mean(sample))
+    lower = np.percentile(means, 2.5)
+    upper = np.percentile(means, 97.5)
+    return lower, upper
 
 # =========================
-# Main Evaluation Function
+# Evaluate One Model
 # =========================
 
 def evaluate_model(pred_file):
@@ -110,66 +105,65 @@ def evaluate_model(pred_file):
     predictions = [d["prediction"] for d in data]
     references = [d["reference"] for d in data]
 
-    # ---------------------
-    # BLEU-2
-    # ---------------------
-    bleu_score = bleu_metric.corpus_score(predictions, [references])
-    bleu2 = bleu_score.score
+    # BLEU
+    bleu2 = bleu2_metric.corpus_score(predictions, [references]).score
+    bleu4 = bleu4_metric.corpus_score(predictions, [references]).score
 
-    # ---------------------
-    # ROUGE-1
-    # ---------------------
+    # ROUGE
     rouge_result = rouge.compute(
         predictions=predictions,
         references=references,
-        use_stemmer=True,
+        use_stemmer=True
     )
+    rouge1 = rouge_result["rouge1"]
 
-    # ---------------------
     # METEOR
-    # ---------------------
     meteor_score = meteor.compute(
         predictions=predictions,
         references=references
     )["meteor"]
 
-    # ---------------------
     # BERTScore
-    # ---------------------
-    P, R, F1 = bertscore(
+    _, _, F1 = bertscore(
         predictions,
         references,
         lang="en",
         device=DEVICE,
+        batch_size=BERT_BATCH_SIZE,
         verbose=False
     )
     bert_f1 = F1.mean().item()
 
-    # ---------------------
     # RadGraph
-    # ---------------------
-    entity_f1, relation_f1, radgraph_f1 = compute_radgraph(predictions, references)
-
-    # ---------------------
-    # RadCliQ
-    # ---------------------
-    radcliq_score = compute_radcliq(
-        radgraph_f1,
-        bert_f1,
-        bleu2
+    rad_scores = f1radgraph(
+        hyps=predictions,
+        refs=references
     )
+
+    radgraph_f1 = rad_scores[0]
+    entity_f1 = rad_scores[2]
+    relation_f1 = rad_scores[3]
+
+    # RadCliQ (heuristic)
+    radcliq = compute_radcliq(radgraph_f1, bert_f1, bleu2)
+
+    # Bootstrap CI for RadGraph
+    per_sample_rad = rad_scores[1]
+    ci_lower, ci_upper = bootstrap_ci(per_sample_rad, BOOTSTRAP_SAMPLES)
 
     return {
         "BLEU-2 ↑": round(bleu2, 2),
-        "ROUGE-1 ↑": round(rouge_result["rouge1"], 4),
+        "BLEU-4 ↑": round(bleu4, 2),
+        "ROUGE-1 ↑": round(rouge1, 4),
         "METEOR ↑": round(meteor_score, 4),
         "BERTScore ↑": round(bert_f1, 4),
         "RadGraph ↑": round(radgraph_f1, 4),
         "RadGraph-Entity ↑": round(entity_f1, 4),
         "RadGraph-Relation ↑": round(relation_f1, 4),
-        "RadCliQ ↓": round(radcliq_score, 4),
+        "RadGraph 95% CI": f"[{ci_lower:.4f}, {ci_upper:.4f}]",
+        "RadCliQ ↓": round(radcliq, 4),
+        "PerSampleRad": per_sample_rad
     }
-
 
 # =========================
 # Run Evaluation
@@ -179,8 +173,22 @@ results = {}
 
 for name, path in PREDICTION_FILES.items():
     print(f"\nEvaluating: {name}")
-    metrics = evaluate_model(path)
-    results[name] = metrics
+    results[name] = evaluate_model(path)
+
+# Paired Significance Test (RadGraph)
+model_names = list(results.keys())
+if len(model_names) == 2:
+    m1, m2 = model_names
+    t_stat, p_value = stats.ttest_rel(
+        results[m1]["PerSampleRad"],
+        results[m2]["PerSampleRad"]
+    )
+    print("\nPaired t-test on RadGraph:")
+    print(f"{m1} vs {m2}: p = {p_value:.6f}")
+
+# Remove per-sample before saving
+for k in results:
+    del results[k]["PerSampleRad"]
 
 df = pd.DataFrame(results).T
 
@@ -188,16 +196,11 @@ print("\n================ Final Comparison ================\n")
 print(df.to_string())
 print("\n=================================================\n")
 
-# =========================
-# Save Results
-# =========================
-
-OUTPUT_DIR = "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_PullLoss_20260228_164119"
+# Save
+OUTPUT_DIR = "./evaluation_results"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-df.to_csv(os.path.join(OUTPUT_DIR, "evaluation_results_final.csv"))
-
-with open(os.path.join(OUTPUT_DIR, "evaluation_results_final.md"), "w") as f:
-    f.write(df.to_markdown())
+df.to_csv(os.path.join(OUTPUT_DIR, "evaluation_results.csv"))
+df.to_markdown(os.path.join(OUTPUT_DIR, "evaluation_results.md"))
 
 print("Results saved successfully.")
