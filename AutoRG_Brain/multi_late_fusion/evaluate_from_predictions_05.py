@@ -140,10 +140,12 @@ def evaluate_model(pred_file):
         refs=references
     )
 
-    radgraph_f1 = float(rad_scores[0])
+    summary_tuple = rad_scores[0]
+    reward_list = rad_scores[1]
 
-    entity_f1 = float(rad_scores[2][2])  # 第3个值才是 F1
-    relation_f1 = float(rad_scores[3][2])  # 第3个值才是 F1
+    radgraph_f1 = float(summary_tuple[0])
+    entity_f1 = float(summary_tuple[1])
+    relation_f1 = float(summary_tuple[2])
 
     # RadCliQ (heuristic)
     radcliq = compute_radcliq(radgraph_f1, bert_f1, bleu2)
