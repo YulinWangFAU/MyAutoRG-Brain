@@ -151,7 +151,7 @@ def evaluate_model(pred_file):
     radcliq = compute_radcliq(radgraph_f1, bert_f1, bleu2)
 
     # Bootstrap CI for RadGraph
-    per_sample_rad = rad_scores[1]
+    per_sample_rad = np.array([float(x[0]) for x in reward_list])
     ci_lower, ci_upper = bootstrap_ci(per_sample_rad, BOOTSTRAP_SAMPLES)
 
     return {
@@ -178,16 +178,37 @@ for name, path in PREDICTION_FILES.items():
     print(f"\nEvaluating: {name}")
     results[name] = evaluate_model(path)
 
-# Paired Significance Test (RadGraph)
+from itertools import combinations
+
 model_names = list(results.keys())
-if len(model_names) == 2:
-    m1, m2 = model_names
-    t_stat, p_value = stats.ttest_rel(
-        results[m1]["PerSampleRad"],
-        results[m2]["PerSampleRad"]
-    )
-    print("\nPaired t-test on RadGraph:")
-    print(f"{m1} vs {m2}: p = {p_value:.6f}")
+
+print("\n===== Paired t-tests on RadGraph (per-sample) =====\n")
+
+# --- Bonferroni correction ---
+num_tests = len(list(combinations(model_names, 2)))
+alpha = 0.05 / num_tests
+
+print(f"Bonferroni-corrected alpha = {alpha:.6f}\n")
+
+for m1, m2 in combinations(model_names, 2):
+
+    scores1 = results[m1]["PerSampleRad"]
+    scores2 = results[m2]["PerSampleRad"]
+
+    t_stat, p_value = stats.ttest_rel(scores1, scores2)
+
+    print(f"{m1}  vs  {m2}")
+    print(f"  p-value = {p_value:.6f}")
+
+    if p_value < 0.001:
+        print("  *** (p < 0.001)")
+    elif p_value < 0.01:
+        print("  **  (p < 0.01)")
+    elif p_value < 0.05:
+        print("  *   (p < 0.05)")
+    else:
+        print("  n.s.")
+    print()
 
 # Remove per-sample before saving
 for k in results:
@@ -204,6 +225,7 @@ OUTPUT_DIR = "./evaluation_results"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 df.to_csv(os.path.join(OUTPUT_DIR, "evaluation_results.csv"))
-df.to_markdown(os.path.join(OUTPUT_DIR, "evaluation_results.md"))
+with open(os.path.join(OUTPUT_DIR, "evaluation_results.md"), "w") as f:
+    f.write(df.to_markdown())
 
 print("Results saved successfully.")
