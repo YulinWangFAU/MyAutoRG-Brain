@@ -50,24 +50,34 @@ radgraph_model = RadGraph(device=DEVICE)
 # =========================
 # RadGraph Evaluation
 # =========================
+from radgraph import RadGraph
+from radgraph.metrics import compute_f1
+import numpy as np
+
+radgraph_model = RadGraph(device=DEVICE)
 
 def compute_radgraph(predictions, references):
 
-    results = radgraph_model(predictions, references)
+    # Step 1: Parse
+    pred_graphs = radgraph_model(predictions)
+    ref_graphs = radgraph_model(references)
 
-    entity_f1_list = []
-    relation_f1_list = []
+    # Step 2: Compute F1
+    entity_scores = []
+    relation_scores = []
 
-    for r in results:
-        entity_f1_list.append(r["entity_f1"])
-        relation_f1_list.append(r["relation_f1"])
+    for pred, ref in zip(pred_graphs, ref_graphs):
 
-    entity_f1 = np.mean(entity_f1_list)
-    relation_f1 = np.mean(relation_f1_list)
+        scores = compute_f1(pred, ref)
+
+        entity_scores.append(scores["entity_f1"])
+        relation_scores.append(scores["relation_f1"])
+
+    entity_f1 = np.mean(entity_scores)
+    relation_f1 = np.mean(relation_scores)
     overall_f1 = (entity_f1 + relation_f1) / 2
 
     return entity_f1, relation_f1, overall_f1
-
 
 # =========================
 # RadCliQ Evaluation
