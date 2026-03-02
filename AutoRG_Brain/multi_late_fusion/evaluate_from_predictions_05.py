@@ -142,23 +142,30 @@ def evaluate_model(pred_file):
         print("BERTScore failed:", e)
         bert_f1 = float("nan")
 
+
     # ---------------- RadGraph ----------------
     try:
-        # 官方推荐调用方式
-        mean_scores, per_sample_scores, *_ = f1radgraph(
+        mean_scores, reward_list, *_ = f1radgraph(
             hyps=predictions,
             refs=references
         )
 
         overall_f1, entity_f1, relation_f1 = mean_scores
-        per_sample_scores = np.array(per_sample_scores)
 
-        ci_low, ci_high = bootstrap_ci(per_sample_scores, BOOTSTRAP_SAMPLES)
+        reward_array = np.array(reward_list)
+
+        # 如果是二维结构 (N,3)
+        if reward_array.ndim == 2:
+            per_sample_overall = reward_array[:, 0]
+        else:
+            per_sample_overall = reward_array
+
+        ci_low, ci_high = bootstrap_ci(per_sample_overall, BOOTSTRAP_SAMPLES)
 
     except Exception as e:
         print("RadGraph failed:", e)
         overall_f1 = entity_f1 = relation_f1 = float("nan")
-        per_sample_scores = np.array([float("nan")] * len(predictions))
+        per_sample_overall = np.array([float("nan")] * len(predictions))
         ci_low = ci_high = float("nan")
 
     return {
@@ -171,7 +178,7 @@ def evaluate_model(pred_file):
         "RadGraph-Entity ↑": round(entity_f1, 4),
         "RadGraph-Relation ↑": round(relation_f1, 4),
         "RadGraph 95% CI": f"[{ci_low:.4f}, {ci_high:.4f}]",
-        "PerSampleRad": per_sample_scores
+        "PerSampleRad": per_sample_overall
     }
 
 # =========================
