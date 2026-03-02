@@ -119,10 +119,9 @@ def evaluate_model(pred_file):
     # =================================================
     assert len(predictions) == len(references)
 
-    # ---------------- BLEU (correct format) ----------------
-    references_bleu = [[ref] for ref in references]
-    bleu2 = bleu2_metric.corpus_score(predictions, references_bleu).score
-    bleu4 = bleu4_metric.corpus_score(predictions, references_bleu).score
+    # ---------------- BLEU (correct sacreBLEU format) ----------------
+    bleu2 = bleu2_metric.corpus_score(predictions, [references]).score
+    bleu4 = bleu4_metric.corpus_score(predictions, [references]).score
 
     # ---------------- ROUGE ----------------
     rouge1 = rouge.compute(
