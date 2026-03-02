@@ -103,7 +103,20 @@ def evaluate_model(pred_file):
 
     predictions = [d["prediction"] for d in data]
     references = [d["reference"] for d in data]
+    # ================= SANITY CHECK =================
+    print("\n--- Sanity Check (first 3 samples) ---")
+    for i in range(min(3, len(predictions))):
+        print("Pred:", predictions[i])
+        print("Ref :", references[i])
+        print("-----")
 
+    identical_count = sum(
+        p.strip() == r.strip() for p, r in zip(predictions, references)
+    )
+    print("Exact identical ratio:",
+          round(identical_count / len(predictions), 4))
+    print("======================================\n")
+    # =================================================
     assert len(predictions) == len(references)
 
     # ---------------- BLEU (correct format) ----------------
