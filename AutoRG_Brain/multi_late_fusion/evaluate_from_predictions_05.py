@@ -142,24 +142,30 @@ def evaluate_model(pred_file):
         print("BERTScore failed:", e)
         bert_f1 = float("nan")
 
-
-    # ---------------- RadGraph ----------------
+    # ---------------- RadGraph (Statistically Consistent Version) ----------------
     try:
         mean_scores, reward_list, *_ = f1radgraph(
             hyps=predictions,
             refs=references
         )
 
-        overall_f1, entity_f1, relation_f1 = mean_scores
-
         reward_array = np.array(reward_list)
 
-        # 如果是二维结构 (N,3)
         if reward_array.ndim == 2:
             per_sample_overall = reward_array[:, 0]
+            per_sample_entity = reward_array[:, 1]
+            per_sample_relation = reward_array[:, 2]
         else:
             per_sample_overall = reward_array
+            per_sample_entity = None
+            per_sample_relation = None
 
+        # 🔥 统一使用 sample mean（不要用 mean_scores）
+        overall_f1 = float(np.mean(per_sample_overall))
+        entity_f1 = float(np.mean(per_sample_entity)) if per_sample_entity is not None else float("nan")
+        relation_f1 = float(np.mean(per_sample_relation)) if per_sample_relation is not None else float("nan")
+
+        # Bootstrap CI 基于 same statistic
         ci_low, ci_high = bootstrap_ci(per_sample_overall, BOOTSTRAP_SAMPLES)
 
     except Exception as e:
