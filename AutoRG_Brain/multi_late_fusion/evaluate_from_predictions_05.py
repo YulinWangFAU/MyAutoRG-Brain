@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Final Evaluation Script (Publication-Ready Version)
+Final Evaluation Script (RadGraph Official-Compliant Version)
 
 Metrics:
 - BLEU-2
@@ -8,10 +8,10 @@ Metrics:
 - ROUGE-1
 - METEOR
 - BERTScore-F1
-- RadGraph (micro: overall, entity, relation)
-- Heuristic Composite Score
-- Bootstrap 95% CI
-- Wilcoxon Signed-Rank Test (Bonferroni corrected)
+- RadGraph (modern-radgraph-xl)
+- Bootstrap 95% CI (RadGraph)
+- Wilcoxon Signed-Rank Test (two-sided + Bonferroni)
+- Effect Size (r)
 
 Author: Yulin Wang
 """
@@ -23,6 +23,7 @@ from sacrebleu.metrics import BLEU
 from bert_score import score as bertscore
 import torch
 import os
+import gc
 import pandas as pd
 from radgraph import F1RadGraph
 from scipy import stats
@@ -44,17 +45,42 @@ BOOTSTRAP_SAMPLES = 1000
 RANDOM_SEED = 42
 
 np.random.seed(RANDOM_SEED)
+torch.manual_seed(RANDOM_SEED)
 
-print("Using device:", DEVICE)
+print("=" * 60)
+print(f"Using device: {DEVICE}")
+print("=" * 60)
+
+# =========================
+# Utility
+# =========================
+
+def clean_memory():
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
+def bootstrap_ci(values, n_samples=1000):
+    values = np.array(values)
+    means = []
+    n = len(values)
+    for _ in range(n_samples):
+        sample = np.random.choice(values, size=n, replace=True)
+        means.append(np.mean(sample))
+    return np.percentile(means, 2.5), np.percentile(means, 97.5)
 
 # =========================
 # Load Metrics
 # =========================
 
+print("Loading metrics...")
+
 rouge = evaluate.load("rouge")
 meteor = evaluate.load("meteor")
 bleu2_metric = BLEU(max_ngram_order=2)
 bleu4_metric = BLEU(max_ngram_order=4)
+
+print("Loading RadGraph modern-radgraph-xl...")
 
 f1radgraph = F1RadGraph(
     reward_level="all",
@@ -62,101 +88,78 @@ f1radgraph = F1RadGraph(
     device=DEVICE
 )
 
-# =========================
-# Heuristic Composite Score
-# =========================
-
-def compute_composite(radgraph_f1, bert_f1, bleu2):
-    bleu_norm = bleu2 / 100.0
-    return 1 - (
-        0.35 * radgraph_f1 +
-        0.30 * bert_f1 +
-        0.35 * bleu_norm
-    )
+print("All metrics loaded.\n")
 
 # =========================
-# Bootstrap CI
-# =========================
-
-def bootstrap_ci(metric_values, n_samples=1000):
-    means = []
-    n = len(metric_values)
-    for _ in range(n_samples):
-        sample = np.random.choice(metric_values, size=n, replace=True)
-        means.append(np.mean(sample))
-    lower = np.percentile(means, 2.5)
-    upper = np.percentile(means, 97.5)
-    return lower, upper
-
-# =========================
-# Evaluate One Model
+# Evaluate Model
 # =========================
 
 def evaluate_model(pred_file):
 
-    with open(pred_file) as f:
+    print(f"\nEvaluating: {os.path.basename(pred_file)}")
+
+    with open(pred_file, "r") as f:
         data = json.load(f)
 
     predictions = [d["prediction"] for d in data]
     references = [d["reference"] for d in data]
 
-    assert len(predictions) == len(references), "Prediction and reference length mismatch!"
+    assert len(predictions) == len(references)
 
-    # BLEU
-    bleu2 = bleu2_metric.corpus_score(predictions, [references]).score
-    bleu4 = bleu4_metric.corpus_score(predictions, [references]).score
+    # ---------------- BLEU (correct format) ----------------
+    references_bleu = [[ref] for ref in references]
+    bleu2 = bleu2_metric.corpus_score(predictions, references_bleu).score
+    bleu4 = bleu4_metric.corpus_score(predictions, references_bleu).score
 
-    # ROUGE
-    rouge_result = rouge.compute(
+    # ---------------- ROUGE ----------------
+    rouge1 = rouge.compute(
         predictions=predictions,
         references=references,
         use_stemmer=True
-    )
-    rouge1 = rouge_result["rouge1"]
+    )["rouge1"]
 
-    # METEOR
+    # ---------------- METEOR ----------------
     meteor_score = meteor.compute(
         predictions=predictions,
         references=references
     )["meteor"]
 
-    # BERTScore
-    _, _, F1 = bertscore(
-        predictions,
-        references,
-        lang="en",
-        device=DEVICE,
-        batch_size=BERT_BATCH_SIZE,
-        verbose=False
-    )
-    bert_f1 = F1.mean().item()
+    # ---------------- BERTScore ----------------
+    try:
+        P, R, F1 = bertscore(
+            predictions,
+            references,
+            lang="en",
+            device=DEVICE,
+            batch_size=BERT_BATCH_SIZE,
+            rescale_with_baseline=True,
+            verbose=False
+        )
+        bert_f1 = F1.mean().item()
+        del P, R, F1
+        clean_memory()
+    except Exception as e:
+        print("BERTScore failed:", e)
+        bert_f1 = float("nan")
 
-    # RadGraph
-    rad_scores = f1radgraph(
-        hyps=predictions,
-        refs=references
-    )
+    # ---------------- RadGraph ----------------
+    try:
+        # 官方推荐调用方式
+        mean_scores, per_sample_scores, *_ = f1radgraph(
+            hyps=predictions,
+            refs=references
+        )
 
-    summary_tuple = rad_scores[0]
-    reward_list = rad_scores[1]
+        overall_f1, entity_f1, relation_f1 = mean_scores
+        per_sample_scores = np.array(per_sample_scores)
 
-    radgraph_f1 = float(summary_tuple[0])
-    entity_f1 = float(summary_tuple[1])
-    relation_f1 = float(summary_tuple[2])
+        ci_low, ci_high = bootstrap_ci(per_sample_scores, BOOTSTRAP_SAMPLES)
 
-    # =========================
-    # 🔥 自动匹配 summary 与 per-sample index
-    # =========================
-
-    means = [np.mean([x[i] for x in reward_list]) for i in range(3)]
-    idx = np.argmin([abs(means[i] - radgraph_f1) for i in range(3)])
-
-    per_sample_rad = np.array([float(x[idx]) for x in reward_list])
-
-    # Bootstrap CI
-    ci_lower, ci_upper = bootstrap_ci(per_sample_rad, BOOTSTRAP_SAMPLES)
-
-    composite = compute_composite(radgraph_f1, bert_f1, bleu2)
+    except Exception as e:
+        print("RadGraph failed:", e)
+        overall_f1 = entity_f1 = relation_f1 = float("nan")
+        per_sample_scores = np.array([float("nan")] * len(predictions))
+        ci_low = ci_high = float("nan")
 
     return {
         "BLEU-2 ↑": round(bleu2, 2),
@@ -164,67 +167,81 @@ def evaluate_model(pred_file):
         "ROUGE-1 ↑": round(rouge1, 4),
         "METEOR ↑": round(meteor_score, 4),
         "BERTScore ↑": round(bert_f1, 4),
-        "RadGraph ↑": round(radgraph_f1, 4),
+        "RadGraph ↑": round(overall_f1, 4),
         "RadGraph-Entity ↑": round(entity_f1, 4),
         "RadGraph-Relation ↑": round(relation_f1, 4),
-        "RadGraph 95% CI": f"[{ci_lower:.4f}, {ci_upper:.4f}]",
-        "Composite ↓": round(composite, 4),
-        "PerSampleRad": per_sample_rad
+        "RadGraph 95% CI": f"[{ci_low:.4f}, {ci_high:.4f}]",
+        "PerSampleRad": per_sample_scores
     }
 
 # =========================
-# Run Evaluation
+# Wilcoxon + Effect Size
 # =========================
 
-results = {}
+def run_wilcoxon(results, alpha=0.05):
 
-for name, path in PREDICTION_FILES.items():
-    print(f"\nEvaluating: {name}")
-    results[name] = evaluate_model(path)
+    model_names = list(results.keys())
+    pairs = list(combinations(model_names, 2))
+    corrected_alpha = alpha / len(pairs)
 
-model_names = list(results.keys())
+    print("\nWilcoxon Signed-Rank Tests (two-sided)")
+    print(f"Bonferroni corrected α = {corrected_alpha:.6f}\n")
 
-print("\n===== Wilcoxon Tests on RadGraph (per-sample) =====\n")
+    for m1, m2 in pairs:
 
-num_tests = len(list(combinations(model_names, 2)))
-alpha = 0.05 / num_tests
+        s1 = results[m1]["PerSampleRad"]
+        s2 = results[m2]["PerSampleRad"]
 
-print(f"Bonferroni-corrected alpha = {alpha:.6f}\n")
+        mask = ~(np.isnan(s1) | np.isnan(s2))
+        s1, s2 = s1[mask], s2[mask]
 
-for m1, m2 in combinations(model_names, 2):
+        if len(s1) < 10:
+            continue
 
-    scores1 = results[m1]["PerSampleRad"]
-    scores2 = results[m2]["PerSampleRad"]
+        stat, p = stats.wilcoxon(s1, s2, alternative="two-sided")
 
-    try:
-        stat, p_value = stats.wilcoxon(scores1, scores2)
-    except ValueError:
-        p_value = 1.0  # identical distributions
+        # Effect size r
+        if p > 0:
+            z = stats.norm.ppf(p / 2)
+            r = abs(z) / np.sqrt(len(s1))
+        else:
+            r = 0.0
 
-    print(f"{m1}  vs  {m2}")
-    print(f"  p-value = {p_value:.6f}")
+        print(f"{m1} vs {m2}")
+        print(f"  p = {p:.6f}")
+        print(f"  effect size r = {r:.4f}")
+        print(f"  {'Significant' if p < corrected_alpha else 'Not significant'}\n")
 
-    if p_value < alpha:
-        print(f"  Significant (Bonferroni corrected)")
-    else:
-        print("  n.s.")
-    print()
+# =========================
+# Main
+# =========================
 
-# Remove per-sample before saving
-for k in results:
-    del results[k]["PerSampleRad"]
+def main():
 
-df = pd.DataFrame(results).T
+    results = {}
 
-print("\n================ Final Comparison ================\n")
-print(df.to_string())
-print("\n=================================================\n")
+    for name, path in PREDICTION_FILES.items():
+        if os.path.exists(path):
+            results[name] = evaluate_model(path)
+        else:
+            print(f"File not found: {path}")
 
-OUTPUT_DIR = "./evaluation_results"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+    run_wilcoxon(results)
 
-df.to_csv(os.path.join(OUTPUT_DIR, "evaluation_results.csv"))
-with open(os.path.join(OUTPUT_DIR, "evaluation_results.md"), "w") as f:
-    f.write(df.to_markdown())
+    display = {
+        k: {kk: vv for kk, vv in v.items() if kk != "PerSampleRad"}
+        for k, v in results.items()
+    }
 
-print("Results saved successfully.")
+    df = pd.DataFrame(display).T
+
+    print("\nFinal Comparison\n")
+    print(df.to_string())
+
+    os.makedirs("./evaluation_results", exist_ok=True)
+    df.to_csv("./evaluation_results/evaluation_results.csv")
+
+    print("\nEvaluation complete.")
+
+if __name__ == "__main__":
+    main()
