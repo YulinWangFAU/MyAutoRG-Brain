@@ -1,7 +1,6 @@
-
 # -*- coding: utf-8 -*-
 """
-Final Evaluation Script (Medical Report Generation - Research Grade)
+Final Evaluation Script (Publication-Ready Version)
 
 Metrics:
 - BLEU-2
@@ -10,9 +9,9 @@ Metrics:
 - METEOR
 - BERTScore-F1
 - RadGraph (micro: overall, entity, relation)
-- RadCliQ (heuristic composite, lower better)
+- Heuristic Composite Score
 - Bootstrap 95% CI
-- Paired Significance Test
+- Wilcoxon Signed-Rank Test (Bonferroni corrected)
 
 Author: Yulin Wang
 """
@@ -27,14 +26,10 @@ import os
 import pandas as pd
 from radgraph import F1RadGraph
 from scipy import stats
-from tqdm import tqdm
+from itertools import combinations
 
 # =========================
 # Config
-# =========================
-
-# =========================
-# Prediction Files
 # =========================
 
 PREDICTION_FILES = {
@@ -68,10 +63,10 @@ f1radgraph = F1RadGraph(
 )
 
 # =========================
-# RadCliQ (Heuristic Version)
+# Heuristic Composite Score
 # =========================
 
-def compute_radcliq(radgraph_f1, bert_f1, bleu2):
+def compute_composite(radgraph_f1, bert_f1, bleu2):
     bleu_norm = bleu2 / 100.0
     return 1 - (
         0.35 * radgraph_f1 +
@@ -104,6 +99,8 @@ def evaluate_model(pred_file):
 
     predictions = [d["prediction"] for d in data]
     references = [d["reference"] for d in data]
+
+    assert len(predictions) == len(references), "Prediction and reference length mismatch!"
 
     # BLEU
     bleu2 = bleu2_metric.corpus_score(predictions, [references]).score
@@ -147,12 +144,19 @@ def evaluate_model(pred_file):
     entity_f1 = float(summary_tuple[1])
     relation_f1 = float(summary_tuple[2])
 
-    # RadCliQ (heuristic)
-    radcliq = compute_radcliq(radgraph_f1, bert_f1, bleu2)
+    # =========================
+    # 🔥 自动匹配 summary 与 per-sample index
+    # =========================
 
-    # Bootstrap CI for RadGraph
-    per_sample_rad = np.array([float(x[0]) for x in reward_list])
+    means = [np.mean([x[i] for x in reward_list]) for i in range(3)]
+    idx = np.argmin([abs(means[i] - radgraph_f1) for i in range(3)])
+
+    per_sample_rad = np.array([float(x[idx]) for x in reward_list])
+
+    # Bootstrap CI
     ci_lower, ci_upper = bootstrap_ci(per_sample_rad, BOOTSTRAP_SAMPLES)
+
+    composite = compute_composite(radgraph_f1, bert_f1, bleu2)
 
     return {
         "BLEU-2 ↑": round(bleu2, 2),
@@ -164,7 +168,7 @@ def evaluate_model(pred_file):
         "RadGraph-Entity ↑": round(entity_f1, 4),
         "RadGraph-Relation ↑": round(relation_f1, 4),
         "RadGraph 95% CI": f"[{ci_lower:.4f}, {ci_upper:.4f}]",
-        "RadCliQ ↓": round(radcliq, 4),
+        "Composite ↓": round(composite, 4),
         "PerSampleRad": per_sample_rad
     }
 
@@ -178,13 +182,10 @@ for name, path in PREDICTION_FILES.items():
     print(f"\nEvaluating: {name}")
     results[name] = evaluate_model(path)
 
-from itertools import combinations
-
 model_names = list(results.keys())
 
-print("\n===== Paired t-tests on RadGraph (per-sample) =====\n")
+print("\n===== Wilcoxon Tests on RadGraph (per-sample) =====\n")
 
-# --- Bonferroni correction ---
 num_tests = len(list(combinations(model_names, 2)))
 alpha = 0.05 / num_tests
 
@@ -195,17 +196,16 @@ for m1, m2 in combinations(model_names, 2):
     scores1 = results[m1]["PerSampleRad"]
     scores2 = results[m2]["PerSampleRad"]
 
-    t_stat, p_value = stats.ttest_rel(scores1, scores2)
+    try:
+        stat, p_value = stats.wilcoxon(scores1, scores2)
+    except ValueError:
+        p_value = 1.0  # identical distributions
 
     print(f"{m1}  vs  {m2}")
     print(f"  p-value = {p_value:.6f}")
 
-    if p_value < 0.001:
-        print("  *** (p < 0.001)")
-    elif p_value < 0.01:
-        print("  **  (p < 0.01)")
-    elif p_value < 0.05:
-        print("  *   (p < 0.05)")
+    if p_value < alpha:
+        print(f"  Significant (Bonferroni corrected)")
     else:
         print("  n.s.")
     print()
@@ -220,7 +220,6 @@ print("\n================ Final Comparison ================\n")
 print(df.to_string())
 print("\n=================================================\n")
 
-# Save
 OUTPUT_DIR = "./evaluation_results"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
