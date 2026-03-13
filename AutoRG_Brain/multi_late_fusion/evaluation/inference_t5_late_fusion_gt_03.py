@@ -46,7 +46,7 @@ print("Using device:", DEVICE)
 # 加载 tokenizer & model
 # =========================
 
-tokenizer = T5Tokenizer.from_pretrained(CHECKPOINT_PATH)
+tokenizer = T5Tokenizer.from_pretrained(CHECKPOINT_PATH, use_fast=False)
 model = T5ForConditionalGeneration.from_pretrained(CHECKPOINT_PATH)
 model.to(DEVICE)
 model.eval()
