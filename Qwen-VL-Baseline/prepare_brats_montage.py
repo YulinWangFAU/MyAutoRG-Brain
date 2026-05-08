@@ -221,6 +221,7 @@ def main():
         )
         all_records.extend(records)
 
+
     csv_path = os.path.join(output_root, "brats_montage_metadata.csv")
     save_metadata_csv(all_records, csv_path)
 
