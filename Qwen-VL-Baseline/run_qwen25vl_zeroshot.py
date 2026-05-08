@@ -12,7 +12,7 @@ from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
 
 model_name = "Qwen/Qwen2.5-VL-3B-Instruct"
 
-image_path = "/home/woody/iwi5/iwi5325h/qwen_mri_montage/train/BraTS-GLI-00017-000.png"
+image_path = "/home/woody/iwi5/iwi5325h/qwen_mri_montage/train/BraTS-GLI-00598-000.png"
 
 model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
     model_name,
