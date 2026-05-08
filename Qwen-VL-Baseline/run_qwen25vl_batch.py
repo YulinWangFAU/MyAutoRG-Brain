@@ -4,10 +4,7 @@ Created on 2026/5/8 19:20
 
 @author: Yulin Wang
 @email: yulin.wang@fau.de
-"""
 
-# -*- coding: utf-8 -*-
-"""
 Batch zero-shot inference with Qwen2.5-VL on BraTS MRI montage images.
 
 Output:
@@ -99,12 +96,9 @@ def generate_report(image_path, model, processor):
 
 def get_image_path(row):
     """
-    Expected image path:
-    /home/woody/iwi5/iwi5325h/qwen_mri_montage/train/BraTS-xxx.png
+    Directly use image path saved in brats_montage_metadata.csv.
     """
-    split = row["split"]
-    subject_id = row["subject_id"]
-    return os.path.join(MONTAGE_ROOT, split, f"{subject_id}.png")
+    return row["output_png_path"]
 
 
 def main():
@@ -126,7 +120,7 @@ def main():
 
     print("Metadata columns:", list(df.columns))
 
-    required_cols = {"split", "subject_id"}
+    required_cols = {"split", "case_id", "output_png_path"}
     missing_cols = required_cols - set(df.columns)
     if missing_cols:
         raise ValueError(f"Missing columns in metadata CSV: {missing_cols}")
@@ -139,7 +133,7 @@ def main():
         results = []
 
         for _, row in tqdm(split_df.iterrows(), total=len(split_df)):
-            subject_id = row["subject_id"]
+            case_id = row["case_id"]
             image_path = get_image_path(row)
 
             if not os.path.exists(image_path):
@@ -151,14 +145,16 @@ def main():
                     prediction = generate_report(image_path, model, processor)
                     status = "success"
                 except Exception as e:
-                    print(f"[ERROR] {subject_id}: {e}")
+                    print(f"[ERROR] {case_id}: {e}")
                     prediction = ""
                     status = "error"
 
             item = {
-                "subject_id": subject_id,
+                "case_id": case_id,
                 "split": split,
                 "image_path": image_path,
+                "largest_tumor_slice_z": int(row["largest_tumor_slice_z"]),
+                "max_tumor_area_pixels": int(row["max_tumor_area_pixels"]),
                 "prediction": prediction,
                 "status": status,
             }
