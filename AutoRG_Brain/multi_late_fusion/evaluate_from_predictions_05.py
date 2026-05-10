@@ -35,8 +35,12 @@ from itertools import combinations
 
 PREDICTION_FILES = {
     "T5-Small": "/home/woody/iwi5/iwi5325h/t5_late_fusion_model_20260218_151904/test_predictions_late_fusion_inputGTmodal.json",
+
     "Flan-T5-Large-LoRA": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_20260218_234219/test_predictions_late_fusion_inputGTmodal.json",
-    "Flan-T5-Large-LoRA-PullLoss": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_PullLoss_20260228_164119/test_predictions_late_fusion_inputGTmodal.json"
+
+    "Flan-T5-Large-LoRA-PullLoss": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_PullLoss_20260228_164119/test_predictions_late_fusion_inputGTmodal.json",
+
+    "Qwen2.5-VL": "/home/woody/iwi5/iwi5325h/qwen25vl_outputs/evaluation/qwen25vl_predictions_with_gt.json"
 }
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
