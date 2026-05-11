@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on 2026/5/11 17:13
-
-@author: Yulin Wang
-@email: yulin.wang@fau.de
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Batch few-shot inference with Qwen2.5-VL on BraTS MRI montage images.
 
 Few-shot examples:
@@ -16,9 +8,9 @@ Few-shot examples:
 3. MEN typical small enhancing nodule
 
 Output:
-- qwen25vl_fewshot3_predictions_train.json
-- qwen25vl_fewshot3_predictions_val.json
-- qwen25vl_fewshot3_predictions_test.json
+- qwen25vl_fewshot3_fix_predictions_train.json
+- qwen25vl_fewshot3_fix_predictions_val.json
+- qwen25vl_fewshot3_fix_predictions_test.json
 """
 
 import os
@@ -89,16 +81,10 @@ FEW_SHOT_CASES = [
 
 
 def get_image_path(row):
-    """
-    Directly use image path saved in brats_montage_metadata.csv.
-    """
     return row["output_png_path"]
 
 
 def build_few_shot_examples(df):
-    """
-    Find image paths for the selected few-shot cases from metadata CSV.
-    """
     case_to_image_path = {
         row["case_id"]: row["output_png_path"]
         for _, row in df.iterrows()
@@ -127,27 +113,25 @@ def build_few_shot_examples(df):
 
 
 def generate_report(image_path, model, processor, few_shot_examples):
-    """
-    Few-shot generation:
-    - First provide 3 example MRI montage images with target reports.
-    - Then provide the query image and ask Qwen2.5-VL to generate a report.
-    """
     query_image = Image.open(image_path).convert("RGB")
 
     messages = []
     all_images = []
 
+    # 1. Add few-shot examples
     for ex in few_shot_examples:
         ex_image = Image.open(ex["image_path"]).convert("RGB")
 
+        # User gives example image + prompt
         messages.append({
             "role": "user",
             "content": [
-                {"type": "image", "image": ex_image},
+                {"type": "image"},
                 {"type": "text", "text": PROMPT},
             ],
         })
 
+        # Assistant gives example target report
         messages.append({
             "role": "assistant",
             "content": [
@@ -157,10 +141,11 @@ def generate_report(image_path, model, processor, few_shot_examples):
 
         all_images.append(ex_image)
 
+    # 2. Add current query image
     messages.append({
         "role": "user",
         "content": [
-            {"type": "image", "image": query_image},
+            {"type": "image"},
             {"type": "text", "text": PROMPT},
         ],
     })
@@ -282,7 +267,7 @@ def main():
 
         output_path = os.path.join(
             OUTPUT_DIR,
-            f"qwen25vl_fewshot3_predictions_{split}.json"
+            f"qwen25vl_fewshot3_fix_predictions_{split}.json"
         )
 
         with open(output_path, "w", encoding="utf-8") as f:
