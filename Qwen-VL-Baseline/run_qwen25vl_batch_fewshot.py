@@ -35,15 +35,14 @@ PROMPT = (
     "You are an expert neuroradiologist. "
     "This image is a 2x2 montage of one axial brain MRI slice from the same patient. "
     "Panel layout: top-left = T1, top-right = T1ce, bottom-left = T2, bottom-right = FLAIR. "
-    "This case is from a brain tumor MRI dataset. "
-    "Generate a concise radiology-style findings section based only on visible image findings. "
-    "Describe lesion signal intensity, contrast enhancement, edema, necrosis, mass effect, and lesion location if visible. "
-    "If no lesion is clearly visible in this slice, state that no obvious lesion is visible on this selected slice. "
+    "This slice was selected from a brain tumor dataset and corresponds to the slice with the largest tumor area according to the available segmentation mask. "
+    "A lesion is expected to be present in this slice. "
+    "Generate a concise radiology-style findings section. "
+    "Describe the visible lesion location, signal intensity on T1/T1ce/T2/FLAIR, enhancement pattern, edema, necrosis/cystic change, mass effect, and midline shift if visible. "
+    "If some details are uncertain, describe them cautiously instead of saying the whole slice is normal. "
     "Do not include patient name, date, markdown headings, or placeholders. "
-    "Do not mention diffusion restriction, hemorrhage, perfusion, spectroscopy, or any sequence that is not provided. "
-    "Do not claim the whole brain is normal based on one slice. "
-    "Do not make a definitive diagnosis. "
-    "Do not invent findings that are not visible."
+    "Do not mention diffusion restriction, hemorrhage, perfusion, spectroscopy, or sequences that are not provided. "
+    "Do not make a definitive diagnosis."
 )
 
 
