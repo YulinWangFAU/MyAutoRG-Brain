@@ -266,7 +266,7 @@ def main():
 
         output_path = os.path.join(
             OUTPUT_DIR,
-            f"qwen25vl_fewshot3_fix_predictions_{split}.json"
+            f"qwen25vl_fewshot3_fix1_predictions_{split}.json"
         )
 
         with open(output_path, "w", encoding="utf-8") as f:
