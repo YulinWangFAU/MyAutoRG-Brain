@@ -40,7 +40,9 @@ PREDICTION_FILES = {
 
     "Flan-T5-Large-LoRA-PullLoss": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_PullLoss_20260228_164119/test_predictions_late_fusion_inputGTmodal.json",
 
-    "Qwen2.5-VL": "/home/woody/iwi5/iwi5325h/qwen25vl_outputs/evaluation/qwen25vl_predictions_with_gt.json"
+    "Qwen2.5-VL-ZeroShot": "/home/woody/iwi5/iwi5325h/qwen25vl_outputs/evaluation/qwen25vl_predictions_with_gt.json",
+
+    "Qwen2.5-VL-FewShot3": "/home/woody/iwi5/iwi5325h/qwen25vl_outputs/evaluation/qwen25vl_fewshot3_predictions_with_gt.json"
 }
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
