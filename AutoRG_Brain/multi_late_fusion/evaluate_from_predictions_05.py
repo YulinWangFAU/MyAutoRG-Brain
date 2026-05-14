@@ -34,6 +34,8 @@ from itertools import combinations
 # =========================
 
 PREDICTION_FILES = {
+    "AutoRG-SingleModal": "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/autorg_single_modal_predictions_with_gt.json",
+
     "T5-Small": "/home/woody/iwi5/iwi5325h/t5_late_fusion_model_20260218_151904/test_predictions_late_fusion_inputGTmodal.json",
 
     "Flan-T5-Large-LoRA": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_20260218_234219/test_predictions_late_fusion_inputGTmodal.json",
