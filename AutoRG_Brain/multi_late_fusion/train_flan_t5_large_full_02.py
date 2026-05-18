@@ -244,7 +244,7 @@ training_args = Seq2SeqTrainingArguments(
 
     max_grad_norm=1.0,
 
-    save_safetensors=False,
+
 )
 
 # ========================
