@@ -635,6 +635,16 @@ class Generic_UNet(SegmentationNetwork):
             whole_feature = torch.flatten(whole_feature,start_dim=1,end_dim=3)
             whole_feature = whole_feature.permute(1,0) # 48 1024
 
+            # Early fusion
+            if not hasattr(self, "_debug_whole_feature_printed"):
+                print("\n[DEBUG 1A] In Generic_UNet.forward()")
+                print("[DEBUG 1A] modal:", modal)
+                print("[DEBUG 1A] x shape after decoder feature_layer:", tuple(x.shape))
+                print("[DEBUG 1A] img_feature shape:", tuple(img_feature.shape))
+                print("[DEBUG 1A] whole_feature shape after pool_conv + flatten + permute:", tuple(whole_feature.shape))
+                print("[DEBUG 1A] self.img_patch_num:", self.img_patch_num)
+                self._debug_whole_feature_printed = True
+
             a = {}
 
             bboxes_ab = sk_regions(sk_label(a_target[0]))
@@ -662,6 +672,16 @@ class Generic_UNet(SegmentationNetwork):
                 abnormal_feature = abnormal_feature.permute(1,0)
 
                 final_feature = torch.cat((whole_feature, abnormal_feature), 0)
+
+                # Early fusion add to figure out feature shape.
+                if not hasattr(self, "_debug_final_feature_printed"):
+                    print("\n[DEBUG 1B] Region feature construction")
+                    print("[DEBUG 1B] abnormal_feature shape:", tuple(abnormal_feature.shape))
+                    print("[DEBUG 1B] whole_feature shape:", tuple(whole_feature.shape))
+                    print("[DEBUG 1B] final_feature shape:", tuple(final_feature.shape))
+                    print("[DEBUG 1B] final_feature dtype:", final_feature.dtype)
+                    print("[DEBUG 1B] final_feature device:", final_feature.device)
+                    self._debug_final_feature_printed = True
 
                 region_features.append(final_feature)
 
@@ -771,6 +791,16 @@ class Generic_UNet(SegmentationNetwork):
 
                     final_feature = torch.cat((whole_feature, abnormal_feature), 0)
 
+                    # Early fusion add to figure out feature shape.
+                    if not hasattr(self, "_debug_final_feature_printed"):
+                        print("\n[DEBUG 1B] Region feature construction")
+                        print("[DEBUG 1B] abnormal_feature shape:", tuple(abnormal_feature.shape))
+                        print("[DEBUG 1B] whole_feature shape:", tuple(whole_feature.shape))
+                        print("[DEBUG 1B] final_feature shape:", tuple(final_feature.shape))
+                        print("[DEBUG 1B] final_feature dtype:", final_feature.dtype)
+                        print("[DEBUG 1B] final_feature device:", final_feature.device)
+                        self._debug_final_feature_printed = True
+
                     region_features.append(final_feature)
 
                 # del hit_ana_mask
@@ -842,11 +872,30 @@ class Generic_UNet(SegmentationNetwork):
 
                     final_feature = torch.cat((whole_feature, abnormal_feature), 0)
 
+                    # Early fusion add to figure out feature shape.
+                    if not hasattr(self, "_debug_final_feature_printed"):
+                        print("\n[DEBUG 1B] Region feature construction")
+                        print("[DEBUG 1B] abnormal_feature shape:", tuple(abnormal_feature.shape))
+                        print("[DEBUG 1B] whole_feature shape:", tuple(whole_feature.shape))
+                        print("[DEBUG 1B] final_feature shape:", tuple(final_feature.shape))
+                        print("[DEBUG 1B] final_feature dtype:", final_feature.dtype)
+                        print("[DEBUG 1B] final_feature device:", final_feature.device)
+                        self._debug_final_feature_printed = True
+
                     region_features.append(final_feature)
                 
                 del ana_masks
         # print(ao)
 
+        if not hasattr(self, "_debug_region_features_return_printed"):
+            print("\n[DEBUG 1C] Before returning from Generic_UNet.forward()")
+            print("[DEBUG 1C] len(region_features):", len(region_features))
+            if len(region_features) > 0:
+                print("[DEBUG 1C] region_features[0] shape:", tuple(region_features[0].shape))
+                print("[DEBUG 1C] region_features[0] dtype:", region_features[0].dtype)
+                print("[DEBUG 1C] region_features[0] device:", region_features[0].device)
+            print("[DEBUG 1C] len(region_direction_names):", len(region_direction_names))
+            self._debug_region_features_return_printed = True
         return region_features,region_direction_names
 
     @staticmethod
@@ -943,6 +992,16 @@ class Generic_UNet(SegmentationNetwork):
                 else:
                     raise RuntimeError("Invalid conv op, cannot determine what dimensionality (2d/3d) the network is")
 
+        if not hasattr(self, "_debug_region_features_return_printed"):
+            print("\n[DEBUG 1C] Before returning from Generic_UNet.forward()")
+            print("[DEBUG 1C] len(region_features):", len(region_features))
+            if len(region_features) > 0:
+                print("[DEBUG 1C] region_features[0] shape:", tuple(region_features[0].shape))
+                print("[DEBUG 1C] region_features[0] dtype:", region_features[0].dtype)
+                print("[DEBUG 1C] region_features[0] device:", region_features[0].device)
+            print("[DEBUG 1C] len(region_direction_names):", len(region_direction_names))
+            self._debug_region_features_return_printed = True
+
         return region_features,region_direction_names
 
     def _internal_predict_3D_3Dconv(self, x: np.ndarray, s, region, min_size: Tuple[int, ...], do_mirroring: bool,
@@ -967,6 +1026,15 @@ class Generic_UNet(SegmentationNetwork):
         region_features,region_direction_names = self._internal_maybe_mirror_and_pred_3D(data[None], seg[None], region, mirror_axes, do_mirroring,
                                                                           modal=modal, eval_mode=eval_mode)
 
+        if not hasattr(self, "_debug_region_features_return_printed"):
+            print("\n[DEBUG 1C] Before returning from Generic_UNet.forward()")
+            print("[DEBUG 1C] len(region_features):", len(region_features))
+            if len(region_features) > 0:
+                print("[DEBUG 1C] region_features[0] shape:", tuple(region_features[0].shape))
+                print("[DEBUG 1C] region_features[0] dtype:", region_features[0].dtype)
+                print("[DEBUG 1C] region_features[0] device:", region_features[0].device)
+            print("[DEBUG 1C] len(region_direction_names):", len(region_direction_names))
+            self._debug_region_features_return_printed = True
         return region_features,region_direction_names
 
     def _internal_maybe_mirror_and_pred_3D(self, x: Union[np.ndarray, torch.tensor], s, region, mirror_axes: tuple,
@@ -987,4 +1055,13 @@ class Generic_UNet(SegmentationNetwork):
 
         region_features,region_direction_names  = self(x, s, modal, region, eval_mode)
 
+        if not hasattr(self, "_debug_region_features_return_printed"):
+            print("\n[DEBUG 1C] Before returning from Generic_UNet.forward()")
+            print("[DEBUG 1C] len(region_features):", len(region_features))
+            if len(region_features) > 0:
+                print("[DEBUG 1C] region_features[0] shape:", tuple(region_features[0].shape))
+                print("[DEBUG 1C] region_features[0] dtype:", region_features[0].dtype)
+                print("[DEBUG 1C] region_features[0] device:", region_features[0].device)
+            print("[DEBUG 1C] len(region_direction_names):", len(region_direction_names))
+            self._debug_region_features_return_printed = True
         return region_features,region_direction_names

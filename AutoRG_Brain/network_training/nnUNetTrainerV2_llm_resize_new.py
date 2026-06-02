@@ -1027,6 +1027,18 @@ class nnUNetTrainerV2(nnUNetTrainer):
                 a={}
                 region_features, _ = self.network(data, target, modal, region, eval_mode="region_oracle")
 
+                if not hasattr(self, "_debug_region_features_list_printed"):
+                    print("\n[DEBUG 2A] After self.network(...) in trainer")
+                    print("[DEBUG 2A] type(region_features):", type(region_features))
+                    print("[DEBUG 2A] len(region_features):", len(region_features))
+                    if len(region_features) > 0:
+                        print("[DEBUG 2A] region_features[0] shape:", tuple(region_features[0].shape))
+                        print("[DEBUG 2A] region_features[0] dtype:", region_features[0].dtype)
+                        print("[DEBUG 2A] region_features[0] device:", region_features[0].device)
+                    print("[DEBUG 2A] modal:", modal)
+                    print("[DEBUG 2A] number of samples in region:", len(region))
+                    self._debug_region_features_list_printed = True
+
                 del data
                 del region
                 del target
@@ -1036,6 +1048,13 @@ class nnUNetTrainerV2(nnUNetTrainer):
                     region_features = torch.tensor(np.array([item.cpu().detach().numpy() for item in region_features])).to(self.llm_model.module.device)
                 else:
                     region_features = torch.tensor(np.array([item.cpu().detach().numpy() for item in region_features])).to(self.llm_model.device)
+
+                if not hasattr(self, "_debug_region_features_tensor_printed"):
+                    print("\n[DEBUG 2B] After converting region_features to tensor")
+                    print("[DEBUG 2B] region_features shape:", tuple(region_features.shape))
+                    print("[DEBUG 2B] region_features dtype:", region_features.dtype)
+                    print("[DEBUG 2B] region_features device:", region_features.device)
+                    self._debug_region_features_tensor_printed = True
 
                 #region_features = torch.tensor(np.array(region_features)).to(self.llm_model.device)
 
@@ -1057,6 +1076,17 @@ class nnUNetTrainerV2(nnUNetTrainer):
 
                 try:
                     
+                    # language_model_loss = self.llm_model(input_ids, attention_mask, region_features, return_loss=True)
+
+                    if not hasattr(self, "_debug_before_llm_printed"):
+                        print("\n[DEBUG 2C] Before llm_model(...)")
+                        print("[DEBUG 2C] input_ids shape:", tuple(input_ids.shape))
+                        print("[DEBUG 2C] attention_mask shape:", tuple(attention_mask.shape))
+                        print("[DEBUG 2C] region_features shape passed to LLM:", tuple(region_features.shape))
+                        print("[DEBUG 2C] region_features dtype:", region_features.dtype)
+                        print("[DEBUG 2C] region_features device:", region_features.device)
+                        self._debug_before_llm_printed = True
+
                     language_model_loss = self.llm_model(input_ids, attention_mask, region_features, return_loss=True)
 
                     if run_online_evaluation:

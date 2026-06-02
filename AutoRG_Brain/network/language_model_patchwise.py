@@ -138,6 +138,16 @@ class GPT2PseudoAttention(nn.Module):
         # query, key, value matrices each have shape [batch_size x seq_len x hidden_dim]
         q_word, k_word, v_word = self.c_attn(word_hidden_states).split(self.split_size, dim=2)
 
+        if not hasattr(self, "_debug_pseudo_attention_printed"):
+            print("\n[DEBUG 3B] In GPT2PseudoAttention.forward()")
+            print("[DEBUG 3B] word_hidden_states shape:", tuple(word_hidden_states.shape))
+            print("[DEBUG 3B] image_hidden_states shape:", tuple(image_hidden_states.shape))
+            print("[DEBUG 3B] attention_mask shape:", tuple(attention_mask.shape))
+            print("[DEBUG 3B] q_word shape:", tuple(q_word.shape))
+            print("[DEBUG 3B] k_word shape:", tuple(k_word.shape))
+            print("[DEBUG 3B] v_word shape:", tuple(v_word.shape))
+            self._debug_pseudo_attention_printed = True
+
         # if layer_past is None, we are either training the model or generating the first token in text generation mode
         if layer_past is None:
             # add an addition dimension to the image_hidden_states
@@ -153,6 +163,12 @@ class GPT2PseudoAttention(nn.Module):
             k_image = self.uk(image_hidden_states)  # shape [batch_size x 1 x hidden_dim]
             v_image = self.uv(image_hidden_states)  # shape [batch_size x 1 x hidden_dim]
 
+            if not hasattr(self, "_debug_kv_image_printed"):
+                print("\n[DEBUG 3C] After projecting image_hidden_states")
+                print("[DEBUG 3C] k_image shape:", tuple(k_image.shape))
+                print("[DEBUG 3C] v_image shape:", tuple(v_image.shape))
+                self._debug_kv_image_printed = True
+
             # if the batch_size is different, then we are in beam search generation mode (adjust k and v image matrices accordingly)
             if k_image.size(0) != k_word.size(0):
                 num_beams = k_word.size(0) // k_image.size(0)
@@ -161,6 +177,12 @@ class GPT2PseudoAttention(nn.Module):
 
             k_image_word = torch.cat((k_image, k_word), dim=1)  # shape [batch_size x 1+seq_len x hidden_dim]
             v_image_word = torch.cat((v_image, v_word), dim=1)  # shape [batch_size x 1+seq_len x hidden_dim]
+
+            if not hasattr(self, "_debug_concat_image_word_printed"):
+                print("\n[DEBUG 3D] After concatenating image tokens and word tokens")
+                print("[DEBUG 3D] k_image_word shape:", tuple(k_image_word.shape))
+                print("[DEBUG 3D] v_image_word shape:", tuple(v_image_word.shape))
+                self._debug_concat_image_word_printed = True
 
             q_word = self._split_heads(q_word, self.num_heads, self.head_dim)  # shape [batch_size x num_heads x seq_len x head_dim]
             k_image_word = self._split_heads(k_image_word, self.num_heads, self.head_dim)  # shape [batch_size x num_heads x 1+seq_len x head_dim]
@@ -289,6 +311,16 @@ class LanguageModel(nn.Module):
         """
         # get a boolean copy of the attention_mask and invert it
         mask_to_ignore_padding_tokens_for_loss_computation = ~(attention_mask.to(torch.bool))
+
+        if not hasattr(self, "_debug_lm_forward_printed"):
+            print("\n[DEBUG 3A] In LanguageModel.forward()")
+            print("[DEBUG 3A] input_ids shape:", tuple(input_ids.shape))
+            print("[DEBUG 3A] attention_mask shape:", tuple(attention_mask.shape))
+            print("[DEBUG 3A] image_hidden_states shape:", tuple(image_hidden_states.shape))
+            print("[DEBUG 3A] image_hidden_states dtype:", image_hidden_states.dtype)
+            print("[DEBUG 3A] image_hidden_states device:", image_hidden_states.device)
+            print("[DEBUG 3A] self.img_patch_num:", self.img_patch_num)
+            self._debug_lm_forward_printed = True
 
         # a = {}
 
