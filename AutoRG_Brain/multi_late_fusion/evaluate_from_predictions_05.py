@@ -33,18 +33,56 @@ from itertools import combinations
 # Config
 # =========================
 
+# PREDICTION_FILES = {
+#     "AutoRG-SingleModal": "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/autorg_single_modal_predictions_with_gt.json",
+#
+#     "T5-Small": "/home/woody/iwi5/iwi5325h/t5_late_fusion_model_20260218_151904/test_predictions_late_fusion_inputGTmodal.json",
+#
+#     "Flan-T5-Large-LoRA": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_20260218_234219/test_predictions_late_fusion_inputGTmodal.json",
+#
+#     "Flan-T5-Large-LoRA-PullLoss": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_PullLoss_20260228_164119/test_predictions_late_fusion_inputGTmodal.json",
+#
+#     "Qwen2.5-VL-ZeroShot": "/home/woody/iwi5/iwi5325h/qwen25vl_outputs/evaluation/qwen25vl_predictions_with_gt.json",
+#
+#     "Qwen2.5-VL-FewShot3": "/home/woody/iwi5/iwi5325h/qwen25vl_outputs/evaluation/qwen25vl_fewshot3_predictions_with_gt.json"
+# }
+
 PREDICTION_FILES = {
-    "AutoRG-SingleModal": "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/autorg_single_modal_predictions_with_gt.json",
+    "AutoRG-SingleModal": (
+        "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/"
+        "AutoRG_Brain/multi_late_fusion/late_fusion_data/"
+        "autorg_single_modal_predictions_with_gt.json"
+    ),
 
-    "T5-Small": "/home/woody/iwi5/iwi5325h/t5_late_fusion_model_20260218_151904/test_predictions_late_fusion_inputGTmodal.json",
+    "T5-Small": (
+        "/home/woody/iwi5/iwi5325h/"
+        "t5_late_fusion_model_20260218_151904/"
+        "test_predictions_late_fusion_autorgmodal.json"
+    ),
 
-    "Flan-T5-Large-LoRA": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_20260218_234219/test_predictions_late_fusion_inputGTmodal.json",
+    "Flan-T5-Large-LoRA": (
+        "/home/woody/iwi5/iwi5325h/"
+        "flan_t5_large_lora_20260218_234219/"
+        "test_predictions_late_fusion_autorgmodal.json"
+    ),
 
-    "Flan-T5-Large-LoRA-PullLoss": "/home/woody/iwi5/iwi5325h/flan_t5_large_lora_PullLoss_20260228_164119/test_predictions_late_fusion_inputGTmodal.json",
+    "Flan-T5-Large-LoRA-PullLoss": (
+        "/home/woody/iwi5/iwi5325h/"
+        "flan_t5_large_lora_PullLoss_20260228_164119/"
+        "late_fusion_PullLoss_autorgmodal_test_predictions.json"
+    ),
 
-    "Qwen2.5-VL-ZeroShot": "/home/woody/iwi5/iwi5325h/qwen25vl_outputs/evaluation/qwen25vl_predictions_with_gt.json",
+    "Qwen2.5-VL-ZeroShot": (
+        "/home/woody/iwi5/iwi5325h/"
+        "qwen25vl_outputs/evaluation/"
+        "qwen25vl_predictions_with_gt.json"
+    ),
 
-    "Qwen2.5-VL-FewShot3": "/home/woody/iwi5/iwi5325h/qwen25vl_outputs/evaluation/qwen25vl_fewshot3_predictions_with_gt.json"
+    "Qwen2.5-VL-FewShot3": (
+        "/home/woody/iwi5/iwi5325h/"
+        "qwen25vl_outputs/evaluation/"
+        "qwen25vl_fewshot3_predictions_with_gt.json"
+    )
 }
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -272,7 +310,7 @@ def main():
     print(df.to_string())
 
     os.makedirs("./evaluation_results", exist_ok=True)
-    df.to_csv("./evaluation_results/evaluation_results.csv")
+    df.to_csv("./evaluation_results/evaluation_results_autorginput.csv")
 
     print("\nEvaluation complete.")
 
