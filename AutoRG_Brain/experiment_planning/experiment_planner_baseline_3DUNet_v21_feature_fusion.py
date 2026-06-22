@@ -29,7 +29,9 @@ class ExperimentPlanner3D_v21(BasePlanner):
         )
 
         target_spacings = [i["current_spacing"] for i in self.plans_per_stage.values()]
-        if self.plans["num_stages"] > 1 and not isinstance(num_threads, (list, tuple)):
+        if self.plans["num_stages"] == 1 and isinstance(num_threads, (list, tuple)):
+            num_threads = num_threads[-1]
+        elif self.plans["num_stages"] > 1 and not isinstance(num_threads, (list, tuple)):
             num_threads = (default_num_threads, num_threads)
 
         preprocessor.run(
