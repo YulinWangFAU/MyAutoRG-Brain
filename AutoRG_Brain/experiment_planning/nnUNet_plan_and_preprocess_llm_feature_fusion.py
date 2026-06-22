@@ -6,7 +6,7 @@ from paths import *
 from preprocess.sanity_checks_llm import verify_dataset_integrity
 from experiment_planning.DatasetAnalyzer import DatasetAnalyzer
 from experiment_planning.utils_llm_feature_fusion import crop
-from experiment_planning.experiment_planner_baseline_3DUNet_v21 import ExperimentPlanner3D_v21
+from experiment_planning.experiment_planner_baseline_3DUNet_v21_feature_fusion import ExperimentPlanner3D_v21
 
 
 def main():
@@ -21,6 +21,7 @@ def main():
     parser.add_argument("--verify_dataset_integrity", required=False, default=False, action="store_true")
     parser.add_argument("-overwrite_plans", type=str, default=None, required=False)
     parser.add_argument("-overwrite_plans_identifier", type=str, default=None, required=False)
+    parser.add_argument("--overwrite_cropped", action="store_true")
 
     args = parser.parse_args()
     dont_run_preprocessing = args.no_pp
@@ -35,7 +36,7 @@ def main():
         if args.verify_dataset_integrity:
             verify_dataset_integrity(join(nnUNet_raw_data, task_name))
 
-        crop(task_name, False, tf)
+        crop(task_name, args.overwrite_cropped, tf)
         tasks.append(task_name)
 
     for t in tasks:
@@ -60,7 +61,7 @@ def main():
         exp_planner.plan_experiment()
 
         if not dont_run_preprocessing:
-            exp_planner.run_preprocessing(threads, "llm")
+            exp_planner.run_preprocessing(threads, "feature_fusion")
 
 
 if __name__ == "__main__":
