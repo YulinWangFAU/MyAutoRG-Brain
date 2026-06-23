@@ -488,6 +488,9 @@ class DataLoader3D(SlimDataLoaderBase):
                 "report": reports}
 
 
+DataLoader3D_Multi = DataLoader3D
+
+
 if __name__ == "__main__":
     t = "Task002_Heart"
     p = join(preprocessing_output_dir, t, "stage1")
