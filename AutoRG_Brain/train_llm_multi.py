@@ -277,7 +277,7 @@ def main():
     else:
         if not validation_only:
             if args.finetune_from is not None:
-                saved_model = torch.load(args.finetune_from, map_location=torch.device('cpu'))
+                saved_model = torch.load(args.finetune_from, map_location=torch.device('cpu'), weights_only=False)
                 load_result = trainer.llm_model.load_state_dict(saved_model['state_dict'], strict=False)
                 print("Missing keys when loading LLM checkpoint:", load_result.missing_keys)
                 print("Unexpected keys when loading LLM checkpoint:", load_result.unexpected_keys)
