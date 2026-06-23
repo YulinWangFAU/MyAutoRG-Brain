@@ -1,7 +1,16 @@
 import importlib
+import os
 import runpy
 import sys
+import types
 
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+nnunet_alias = types.ModuleType("nnunet")
+nnunet_alias.__path__ = [os.path.dirname(os.path.abspath(__file__))]
+sys.modules.setdefault("nnunet", nnunet_alias)
+sys.modules.setdefault("nnunet.paths", importlib.import_module("paths"))
 
 fused_lm = importlib.import_module("network.language_model_patchwise_fused")
 sys.modules["network.language_model_patchwise"] = fused_lm
