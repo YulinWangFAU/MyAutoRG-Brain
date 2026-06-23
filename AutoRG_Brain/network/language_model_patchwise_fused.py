@@ -29,6 +29,8 @@ import json
 from batchgenerators.utilities.file_and_folder_operations import *
 import os
 
+from network.trainable_multimodal_fusion import build_multimodal_fusion_module
+
 
 class Conv1DWithTrainedWeights(nn.Module):
     """
@@ -178,6 +180,16 @@ class GPT2PseudoAttention(nn.Module):
             # image_hidden_states = image_hidden_states.repeat(1,self.img_patch_num,1)
 
             # get the key and value matrices for the image hidden states
+            if image_hidden_states.dim() == 4:
+                if image_hidden_states.size(1) == 4:
+                    image_hidden_states = image_hidden_states.mean(dim=1)
+                elif image_hidden_states.size(2) == 4:
+                    image_hidden_states = image_hidden_states.mean(dim=2)
+                else:
+                    raise ValueError(
+                        "Pseudo attention received 4D image_hidden_states but cannot infer modality axis: "
+                        f"{tuple(image_hidden_states.shape)}"
+                    )
 
             if str(image_hidden_states.dtype) != str(self.uk.weight.dtype):
                 pass
@@ -295,6 +307,26 @@ class LanguageModel(nn.Module):
 
         self.img_patch_num = img_patch_num
 
+        self.fusion_type = os.environ.get("AUTORG_FUSION_TYPE", "mean").lower()
+        self.num_modalities = int(os.environ.get("AUTORG_NUM_MODALITIES", "4"))
+        self.fusion_module = None
+
+        if self.fusion_type in ("mean", "mean_fusion", "mean_over_modalities"):
+            self.fusion_type = "mean"
+        else:
+            self.fusion_module = build_multimodal_fusion_module(
+                fusion_type=self.fusion_type,
+                num_modalities=self.num_modalities,
+                num_patch_tokens=self.img_patch_num,
+                hidden_dim=1024,
+                gate_hidden_dim=int(os.environ.get("AUTORG_FUSION_GATE_HIDDEN_DIM", "256")),
+                dropout=float(os.environ.get("AUTORG_FUSION_DROPOUT", "0.1")),
+            )
+
+        print("[FUSED LM] fusion_type:", self.fusion_type)
+        if self.fusion_module is not None:
+            print("[FUSED LM] trainable fusion module:", self.fusion_module.__class__.__name__)
+
     def _replace_attention_by_pseudo_attention(self):
         GPT2PSA_list = []
 
@@ -361,6 +393,7 @@ class LanguageModel(nn.Module):
         # image_hidden_states = self.feature_space_transformation_nn(image_hidden_states)  # shape [batch_size x word_hidden_dim], with word_hidden_dim = 1024
         # image_hidden_states = image_hidden_states[:, None, :]  # shape [batch_size x 1 x hidden_dim
         # image_hidden_states = image_hidden_states.repeat(1,self.img_patch_num,1)
+        image_hidden_states = self._prepare_fused_image_hidden_states(image_hidden_states)
 
         input_shape = input_ids.size()
         input_ids = input_ids.view(-1, input_shape[-1])
@@ -503,19 +536,29 @@ class LanguageModel(nn.Module):
             fused_image_hidden_states: [B, P, D]
             Example: [1, 128, 1024]
 
-        Here, mean fusion is used as the first baseline:
-            [B, M, P, D] -> mean over M -> [B, P, D]
+        Fusion methods:
+            - mean: [B, M, P, D] -> mean over M -> [B, P, D]
+            - weighted_mean/token_gated/concat_projection:
+              trainable modules from network.trainable_multimodal_fusion
         """
         if image_hidden_states is None:
             raise ValueError("image_hidden_states cannot be None.")
 
         if image_hidden_states.dim() == 4:
+            if image_hidden_states.size(1) != self.num_modalities and image_hidden_states.size(2) == self.num_modalities:
+                image_hidden_states = image_hidden_states.permute(0, 2, 1, 3).contiguous()
+
             # [B, M, P, D]
             print("\n[FUSED DEBUG] Multi-modal image_hidden_states received before GPT2 decoder")
             print("[FUSED DEBUG] before fusion shape:", tuple(image_hidden_states.shape))
-            print("[FUSED DEBUG] fusion method: mean over modality dimension dim=1")
+            print("[FUSED DEBUG] fusion method:", self.fusion_type)
 
-            image_hidden_states = image_hidden_states.mean(dim=1)
+            if self.fusion_module is None:
+                image_hidden_states = image_hidden_states.mean(dim=1)
+            else:
+                image_hidden_states = self.fusion_module(image_hidden_states)
+                if image_hidden_states.dim() == 4:
+                    image_hidden_states = image_hidden_states.mean(dim=1)
 
             print("[FUSED DEBUG] after fusion shape:", tuple(image_hidden_states.shape))
 
@@ -636,7 +679,7 @@ class LanguageModel(nn.Module):
                     "original_input_shape": original_image_hidden_states_shape,
                     "fused_shape": tuple(image_hidden_states.shape),
                     "dtype": str(image_hidden_states.dtype),
-                    "fusion_method": "mean_over_modality_dim_1_if_4d_input",
+                    "fusion_method": self.fusion_type,
                     "save_index": save_idx,
                 },
                 save_path
