@@ -1,3 +1,5 @@
+import os
+
 import dataset.dataset_loading_llm_multi as multi_loader
 
 if not hasattr(multi_loader, "DataLoader3D_Multi"):
@@ -19,6 +21,11 @@ from network.generic_UNet_share_get_feature_patchwise_feature_fusion import Gene
 
 
 class nnUNetTrainerV2(BaseTrainer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.batch_size = int(os.environ.get("AUTORG_REAL_BATCH_SIZE", "2"))
+        print("[FEATURE FUSION] real dataloader batch_size:", self.batch_size)
+
     def get_basic_generators(self):
         self.load_dataset()
         self.do_split()
