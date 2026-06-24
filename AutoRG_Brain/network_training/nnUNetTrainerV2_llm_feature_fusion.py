@@ -26,6 +26,13 @@ class nnUNetTrainerV2(BaseTrainer):
         self.batch_size = int(os.environ.get("AUTORG_REAL_BATCH_SIZE", "2"))
         print("[FEATURE FUSION] real dataloader batch_size:", self.batch_size)
 
+    def setup_DA_params(self):
+        super().setup_DA_params()
+        self.data_aug_params["num_threads"] = int(os.environ.get("AUTORG_AUG_NUM_THREADS", "1"))
+        self.data_aug_params["num_cached_per_thread"] = int(os.environ.get("AUTORG_AUG_CACHE_PER_THREAD", "1"))
+        print("[FEATURE FUSION] aug num_threads:", self.data_aug_params["num_threads"])
+        print("[FEATURE FUSION] aug num_cached_per_thread:", self.data_aug_params["num_cached_per_thread"])
+
     def get_basic_generators(self):
         self.load_dataset()
         self.do_split()
