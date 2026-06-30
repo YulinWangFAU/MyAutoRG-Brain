@@ -8,7 +8,13 @@ from network.generic_UNet_share_get_feature_patchwise import Generic_UNet as Bas
 
 
 class Generic_UNet(BaseGenericUNet):
-    modality_context_names = ("T1WI", "DWI", "T2WI", "T2FLAIR")
+    # Input channels are built in script/build_feature_fusion_train_json.py as:
+    #   0: t1n, 1: t1c, 2: t2w, 3: t2f
+    # AutoRG has no separate T1CE encoder branch, so both t1n and t1c are routed
+    # through the pretrained T1WI branch. The stacked feature order remains
+    # [t1n-as-T1WI, t1c-as-T1WI, t2w-as-T2WI, t2f-as-T2FLAIR].
+    input_channel_modalities = ("t1n", "t1c", "t2w", "t2f")
+    modality_context_names = ("T1WI", "T1WI", "T2WI", "T2FLAIR")
 
     def _context_blocks_for_modal(self, modal):
         if modal == "DWI":
