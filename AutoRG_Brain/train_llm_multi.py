@@ -158,6 +158,18 @@ def main():
         default=0.1,
         help="dropout used by trainable fusion modules"
     )
+    parser.add_argument(
+        "--output_root",
+        type=str,
+        default=None,
+        help="optional root folder for training outputs/checkpoints"
+    )
+    parser.add_argument(
+        "--experiment_name",
+        type=str,
+        default=None,
+        help="optional experiment folder name under output_root"
+    )
 
     args = parser.parse_args()
 
@@ -213,6 +225,22 @@ def main():
         fold = int(fold)
 
     plans_file, output_folder_name, dataset_directory, batch_dice, stage = get_default_configuration(network, task, network_trainer, plans_identifier, plans_file = args.plans_file)
+
+    if args.output_root is not None:
+        if args.experiment_name is not None:
+            experiment_name = args.experiment_name
+        else:
+            experiment_name = (
+                f"{task}_{network}_{network_trainer}"
+                f"_input-{args.input_mode}"
+                f"_fusion-{args.fusion_type}"
+                f"_layer-{args.feature_layer}"
+                f"_size-{args.size}"
+                f"_dataset-{args.dataset}"
+            )
+        output_folder_name = join(args.output_root, experiment_name)
+        maybe_mkdir_p(output_folder_name)
+        print("[TRAIN FUSION] output_folder:", output_folder_name)
 
     dataset_directory_bucket = preprocessing_output_dir_bucket+'//'+task if args.bucket else None
 
