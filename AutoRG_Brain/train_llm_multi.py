@@ -237,6 +237,10 @@ def main():
                 f"_layer-{args.feature_layer}"
                 f"_size-{args.size}"
                 f"_dataset-{args.dataset}"
+                f"_fold-{fold}"
+                f"_trainb-{args.num_batches_per_epoch}"
+                f"_valb-{args.num_val_batches_per_epoch}"
+                f"_realb-{os.environ.get('AUTORG_REAL_BATCH_SIZE', 'default')}"
             )
         output_folder_name = join(args.output_root, experiment_name)
         maybe_mkdir_p(output_folder_name)
