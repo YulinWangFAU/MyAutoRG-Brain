@@ -1052,11 +1052,14 @@ class nnUNetTrainerV2(nnUNetTrainer):
                 del region
                 del target
 
-                # UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor.
-                if torch.cuda.device_count() >1:
-                    region_features = torch.tensor(np.array([item.cpu().detach().numpy() for item in region_features])).to(self.llm_model.module.device)
+                target_device = self.llm_model.module.device if torch.cuda.device_count() > 1 else self.llm_model.device
+                if isinstance(region_features, (list, tuple)):
+                    region_features = torch.stack(
+                        [item.detach().to(target_device) for item in region_features],
+                        dim=0,
+                    )
                 else:
-                    region_features = torch.tensor(np.array([item.cpu().detach().numpy() for item in region_features])).to(self.llm_model.device)
+                    region_features = region_features.detach().to(target_device)
 
                 #region_features = torch.tensor(np.array(region_features)).to(self.llm_model.device)
 
