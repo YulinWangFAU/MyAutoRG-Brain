@@ -12,6 +12,7 @@ preprocessed files.
 """
 
 import argparse
+from collections import OrderedDict
 import json
 import multiprocessing as mp
 import pickle
@@ -53,6 +54,28 @@ def build_case_lists(dataset_json):
         cur_case.append(entry["label2"])
         case_lists.append(cur_case)
     return case_lists
+
+
+def repeat_mapping_to_modalities(mapping, num_modalities):
+    if len(mapping) == num_modalities:
+        return mapping
+    if len(mapping) != 1:
+        raise RuntimeError(
+            f"Cannot expand mapping with {len(mapping)} entries to {num_modalities} modalities."
+        )
+    value = next(iter(mapping.values()))
+    return OrderedDict((i, value) for i in range(num_modalities))
+
+
+def repeat_intensityproperties_to_modalities(intensityproperties, num_modalities):
+    if intensityproperties is None or len(intensityproperties) == num_modalities:
+        return intensityproperties
+    if len(intensityproperties) != 1:
+        raise RuntimeError(
+            f"Cannot expand intensityproperties with {len(intensityproperties)} entries to {num_modalities} modalities."
+        )
+    value = next(iter(intensityproperties.values()))
+    return OrderedDict((i, value) for i in range(num_modalities))
 
 
 def preprocess_one(args):
@@ -164,9 +187,19 @@ def main():
         for seg_path in gt_src.glob("*.nii.gz"):
             shutil.copy2(seg_path, gt_dst / seg_path.name)
 
-    normalization_schemes = plans["normalization_schemes"]
-    use_nonzero_mask = plans["use_mask_for_norm"]
-    intensityproperties = plans["dataset_properties"]["intensityproperties"]
+    num_modalities = len(case_lists[0]) - 2
+    normalization_schemes = repeat_mapping_to_modalities(
+        plans["normalization_schemes"],
+        num_modalities,
+    )
+    use_nonzero_mask = repeat_mapping_to_modalities(
+        plans["use_mask_for_norm"],
+        num_modalities,
+    )
+    intensityproperties = repeat_intensityproperties_to_modalities(
+        plans["dataset_properties"]["intensityproperties"],
+        num_modalities,
+    )
     transpose_forward = plans["transpose_forward"]
     all_classes = plans.get("all_classes", plans["dataset_properties"]["all_classes"])
     target_spacing = plans["plans_per_stage"][stage]["current_spacing"]
