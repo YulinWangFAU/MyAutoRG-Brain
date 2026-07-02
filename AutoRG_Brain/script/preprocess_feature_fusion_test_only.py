@@ -16,7 +16,12 @@ import json
 import multiprocessing as mp
 import pickle
 import shutil
+import sys
 from pathlib import Path
+
+AUTO_RG_ROOT = Path(__file__).resolve().parents[1]
+if str(AUTO_RG_ROOT) not in sys.path:
+    sys.path.insert(0, str(AUTO_RG_ROOT))
 
 from batchgenerators.utilities.file_and_folder_operations import maybe_mkdir_p
 
