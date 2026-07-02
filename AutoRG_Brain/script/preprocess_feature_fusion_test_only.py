@@ -39,9 +39,9 @@ def load_pickle(path):
         return pickle.load(f)
 
 
-def resolve_from_script(script_dir, path):
+def resolve_path(path):
     path = Path(path)
-    return (script_dir / path).resolve() if not path.is_absolute() else path
+    return path if path.is_absolute() else path.resolve()
 
 
 def build_case_lists(dataset_json):
@@ -115,12 +115,10 @@ def parse_args():
 
 def main():
     args = parse_args()
-    script_dir = Path(__file__).resolve().parent
-
-    dataset_json = resolve_from_script(script_dir, args.dataset_json)
-    plans_file = resolve_from_script(script_dir, args.plans_file)
-    preprocessed_task_dir = resolve_from_script(script_dir, args.preprocessed_task_dir)
-    cropped_tmp_dir = resolve_from_script(script_dir, args.cropped_tmp_dir)
+    dataset_json = resolve_path(args.dataset_json)
+    plans_file = resolve_path(args.plans_file)
+    preprocessed_task_dir = resolve_path(args.preprocessed_task_dir)
+    cropped_tmp_dir = resolve_path(args.cropped_tmp_dir)
 
     plans = load_pickle(plans_file)
     data_identifier = plans["data_identifier"]
