@@ -64,26 +64,29 @@ class Generic_UNet(BaseGenericUNet):
             b_target = target[b][:-1] if not only_one_target else target[b][-1:]
             a_target = target[b][-1:]
 
+            b_target_np = b_target.detach().cpu().numpy() if torch.is_tensor(b_target) else b_target
+            a_target_np = a_target.detach().cpu().numpy() if torch.is_tensor(a_target) else a_target
+
             ana_masks = []
             for ana_group in r:
                 if ana_group == "global":
-                    ana_masks.append(a_target)
+                    ana_masks.append(a_target_np)
                 elif ana_group == "abnormal":
-                    ana_masks.append(a_target)
+                    ana_masks.append(a_target_np)
                 else:
-                    ana_masks.append(np.zeros(b_target.shape))
+                    ana_masks.append(np.zeros(b_target_np.shape, dtype=bool))
                     for ana in ana_group:
-                        ana_masks[-1] = np.logical_or(ana_masks[-1], b_target == ana)
+                        ana_masks[-1] = np.logical_or(ana_masks[-1], b_target_np == ana)
 
-            bboxes_ab = sk_regions(sk_label(a_target[0]))
+            bboxes_ab = sk_regions(sk_label(a_target_np[0]))
 
             for idx, ana_group in enumerate(r):
                 if ana_group == "global":
-                    abnormal = np.ones(b_target.shape)
+                    abnormal = np.ones(b_target_np.shape, dtype=bool)
                 elif ana_group == "abnormal":
-                    abnormal = a_target
+                    abnormal = a_target_np
                 else:
-                    abnormal = np.zeros(b_target.shape)
+                    abnormal = np.zeros(b_target_np.shape, dtype=bool)
 
                     for box in bboxes_ab:
                         z1, x1, y1, z2, x2, y2 = box.bbox
@@ -93,8 +96,9 @@ class Generic_UNet(BaseGenericUNet):
 
                     abnormal = np.logical_or(abnormal, ana_masks[idx])
 
-                abnormal = torch.tensor(abnormal, dtype=torch.float16)
-                abnormal = abnormal.repeat(img_feature.shape[0], 1, 1, 1).to(img_feature.device)
+                abnormal = torch.as_tensor(abnormal, dtype=torch.float16, device=img_feature.device)
+                abnormal = abnormal.repeat(img_feature.shape[0], 1, 1, 1)
+
                 abnormal_feature = abnormal * img_feature
 
                 for pool_layer in self.pool_conv:
