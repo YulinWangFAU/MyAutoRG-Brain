@@ -40,7 +40,6 @@ import numpy as np
 import pandas as pd
 import torch
 from bert_score import score as bertscore
-from radgraph import F1RadGraph
 from sacrebleu.metrics import BLEU
 from scipy import stats
 
@@ -208,9 +207,19 @@ def compute_metrics(
             reward_array = np.asarray(reward_list, dtype=float)
 
             if reward_array.ndim == 2:
-                per_sample_overall = reward_array[:, 0]
-                per_sample_entity = reward_array[:, 1]
-                per_sample_relation = reward_array[:, 2]
+                if reward_array.shape[0] == len(predictions) and reward_array.shape[1] >= 3:
+                    per_sample_overall = reward_array[:, 0]
+                    per_sample_entity = reward_array[:, 1]
+                    per_sample_relation = reward_array[:, 2]
+                elif reward_array.shape[1] == len(predictions) and reward_array.shape[0] >= 3:
+                    per_sample_overall = reward_array[0, :]
+                    per_sample_entity = reward_array[1, :]
+                    per_sample_relation = reward_array[2, :]
+                else:
+                    raise ValueError(
+                        "Unexpected RadGraph reward shape: "
+                        f"{reward_array.shape}; expected (N, 3) or (3, N)."
+                    )
             else:
                 per_sample_overall = reward_array
 
@@ -354,6 +363,8 @@ def main():
         f1radgraph = None
     else:
         print("Loading RadGraph modern-radgraph-xl...")
+        from radgraph import F1RadGraph
+
         f1radgraph = F1RadGraph(
             reward_level="all",
             model_type="modern-radgraph-xl",
