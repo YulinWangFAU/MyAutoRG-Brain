@@ -17,6 +17,8 @@ export https_proxy=http://proxy.nhr.fau.de:80
 export HF_HOME=/home/woody/iwi5/iwi5325h/huggingface_cache
 export TRANSFORMERS_CACHE=/home/woody/iwi5/iwi5325h/huggingface_cache
 export TOKENIZERS_PARALLELISM=false
+# The configured NHR proxy is trusted; allow NLTK to fetch punkt data through it.
+export NLTK_ALLOW_PROXIED_URLOPEN=1
 
 module load python/3.12-conda
 conda activate eval_ratescore

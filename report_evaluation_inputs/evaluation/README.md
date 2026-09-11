@@ -48,6 +48,16 @@ python -m pip check
 python -m pip install -r requirements.txt
 ```
 
+The V100 nodes require a PyTorch build that still contains CUDA kernels for compute capability 7.0. If a newer CUDA build reports `no kernel image is available for execution on the device`, install the CUDA 11.8 build used by the existing RadGraph environment:
+
+```bash
+python -m pip uninstall -y torch torchvision torchaudio
+python -m pip install \
+  torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 \
+  --index-url https://download.pytorch.org/whl/cu118
+python -m pip check
+```
+
 Do not run `check_eval_env.py` on the login node because it intentionally requires CUDA. Submit the GPU evaluation with:
 
 ```bash
