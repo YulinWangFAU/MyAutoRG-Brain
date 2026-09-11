@@ -1,25 +1,28 @@
-#!/bin/bash -l
-#
-#SBATCH --job-name=brain_mri_ratescore
-#SBATCH --gres=gpu:a40:1
+#!/bin/bash
+#SBATCH --job-name=eval_ratescore
+#SBATCH --output=logs/eval_ratescore_%j.out
+#SBATCH --error=logs/eval_ratescore_%j.err
+#SBATCH --partition=v100
+#SBATCH --gres=gpu:v100:1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=32G
-#SBATCH --time=04:00:00
-#SBATCH --export=NONE
-#SBATCH --output=ratescore_%j.out
-#SBATCH --error=ratescore_%j.err
+#SBATCH --time=06:00:00
 
 set -euo pipefail
-unset SLURM_EXPORT_ENV
+
+export SLURM_EXPORT_ENV=ALL
+
+export http_proxy=http://proxy.nhr.fau.de:80
+export https_proxy=http://proxy.nhr.fau.de:80
+
+export HF_HOME=/home/woody/iwi5/iwi5325h/huggingface_cache
+export TRANSFORMERS_CACHE=/home/woody/iwi5/iwi5325h/huggingface_cache
+export TOKENIZERS_PARALLELISM=false
 
 module load python/3.12-conda
-conda activate eval_radgraph
+conda activate eval_ratescore
 
-cd "$WORK/LLM-MRI-THESIS-PROJECT/MyAutoRG-Brain/report_evaluation_inputs/evaluation"
+cd "$HOME/MyAutoRG-Brain/report_evaluation_inputs/evaluation"
 
-# Keep downloaded model weights on project storage rather than the small home quota.
-export HF_HOME="$WORK/huggingface_cache"
-export TOKENIZERS_PARALLELISM=false
 mkdir -p "$HF_HOME" results
 
 nvidia-smi
