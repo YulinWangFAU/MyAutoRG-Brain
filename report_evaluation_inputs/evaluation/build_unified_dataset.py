@@ -24,6 +24,36 @@ class ReportSource:
 
 SOURCES = (
     ReportSource(
+        "baseline",
+        "Direct-AutoRG",
+        "gt_abnormal_mask",
+        "single_modal/case_level_baselines/direct_autorg_test_with_full_gt.json",
+    ),
+    ReportSource(
+        "single_modal",
+        "AutoRG-T1",
+        "gt_abnormal_mask",
+        "single_modal/case_level_baselines/autorg_t1n_test_with_full_gt.json",
+    ),
+    ReportSource(
+        "single_modal",
+        "AutoRG-T1C",
+        "gt_abnormal_mask",
+        "single_modal/case_level_baselines/autorg_t1c_test_with_full_gt.json",
+    ),
+    ReportSource(
+        "single_modal",
+        "AutoRG-T2",
+        "gt_abnormal_mask",
+        "single_modal/case_level_baselines/autorg_t2w_test_with_full_gt.json",
+    ),
+    ReportSource(
+        "single_modal",
+        "AutoRG-FLAIR",
+        "gt_abnormal_mask",
+        "single_modal/case_level_baselines/autorg_t2f_test_with_full_gt.json",
+    ),
+    ReportSource(
         "text_level",
         "T5-Small",
         "autorg_prediction",
@@ -219,6 +249,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    baseline_dir = args.input_root / "single_modal" / "case_level_baselines"
+    if not baseline_dir.is_dir():
+        raise FileNotFoundError(
+            f"Missing {baseline_dir}. Run build_autorg_baselines.py before build_unified_dataset.py."
+        )
     groups = [load_source(args.input_root, source) for source in SOURCES]
     validate_alignment(groups)
 

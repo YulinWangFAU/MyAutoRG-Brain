@@ -1,0 +1,646 @@
+[
+  {
+    "case_id": "BraTS-GLI-00006-000",
+    "prediction": "The FLAIR sequence reveals the lesion in the left frontal lobe with mixed high and low signal intensities, indicating a heterogeneous background. The lesion's boundaries are well defined, with compression of the surrounding brain parenchyma and a deviation of midline structures to the right.",
+    "reference": "A lesion with approximately round abnormal signal is seen in the left frontal lobe, showing high signal on T1W, T2W, FLAIR sequences, with marked ring-like enhancement on T1C, having unclear borders, measuring about 76*72*69mm. Extensive edema is present in the surrounding brain parenchyma, with compression of the anterior horns of the bilateral lateral ventricles and deviation of midline structures to the right.",
+    "modality_reference": "On the FLAIR sequence, the aforementioned lesion within the left frontal lobe exhibits high signal intensity. Surrounding brain edema is noted.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00014-001",
+    "prediction": "The lesions in the left temporal lobe and the right cerebellum exhibit high signal intensity on FLAIR sequences, with surrounding brain tissue edema.",
+    "reference": "In the left temporal lobe, insular region, and basal ganglia area, there is a mass-like abnormal signal shadow, presenting with slightly low signal on T1-weighted images, isointense signal on T2-weighted images, and slightly high signal on FLAIR. There is uneven mild enhancement following T1 contrast, with clear boundaries. The size of the lesion is approximately 51*70*41 mm, with peritumoral edema. There is no shift of midline structures.",
+    "modality_reference": "On FLAIR sequence, the lesion in the left temporal lobe, insular region, and basal ganglia area displays a slightly hyperintense signal. The lesion has clear boundaries and is associated with peritumoral edema. Midline structures show no evidence of displacement.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00032-001",
+    "prediction": "On the FLAIR sequence, the lesion in the left frontal-parietal-occipital lobe shows a mixed signal, suggesting a heterogeneous nature.",
+    "reference": "At the junction of the left frontal and parietal lobes, an irregular abnormal signal focus is observed, presenting with low signal intensity on T1W with a small amount of high signal, mixed high and low signal intensity on T2W and FLAIR, and marked ring-like enhancement on T1C. The boundaries are indistinct, and the size is approximately 56*88*76 mm. There is extensive edema in the surrounding brain parenchyma, and the midline structures are slightly shifted to the right.",
+    "modality_reference": "There is a mixed high and low signal focus in the left frontal-parietal junction on FLAIR sequences, which is consistent with the findings on T2W sequence, along with significant surrounding edema, affecting the midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00072-001",
+    "prediction": "On FLAIR sequences, the lesion in the left parietal lobe exhibits high signal intensity, suggesting a mixed signal intensity of different tissue types. There is no shift of midline structures, suggesting that there is no direct impact on the nearby brain tissue.",
+    "reference": "A mass-like abnormal signal is seen in the left parietal temporal lobe, presenting as slightly hypointense on T1-weighted images, slightly hyperintense on T2-weighted images, and slightly hyperintense on FLAIR images. There is uneven enhancement following contrast (T1C), with a clear boundary. The size of the lesion is approximately 44*53*37mm, with surrounding edema. There is no midline shift. The posterior horn of the left lateral ventricle is mildly compressed and narrowed.",
+    "modality_reference": "On FLAIR images, the lesion in the left parietal temporal lobe is slightly hyperintense, with a clear boundary and surrounding edema. There is no alteration in the midline structures, sulci, gyri, ventricles, or cisterns apart from the mild compression and narrowing of the posterior horn of the left lateral ventricle.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00104-000",
+    "prediction": "On FLAIR imaging, the lesion exhibits a slightly hyperintense signal, indicating a breakdown of the blood-brain barrier. There is no evidence of a midline shift or alterations in the surrounding brain tissue.",
+    "reference": "An abnormal signal is observed in the left frontal lobe, showing slightly low signal on T1-weighted (T1W) images, slightly high signal on T2-weighted (T2W) images, and slightly high signal on Fluid Attenuated Inversion Recovery (FLAIR) sequences. The lesion presents with uneven enhancement on T1 post-contrast (T1C) imaging, has a clear boundary, and measures approximately 55*76*54 mm. Peritumoral edema is present. There is a rightward shift of midline structures.",
+    "modality_reference": "In the left frontal lobe, the abnormality is appreciated as a slightly high signal with clear demarcation, accompanied by edema in the surrounding tissue and causing a shift of midline structures to the right.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00110-000",
+    "prediction": "On FLAIR sequences, the lesion in the left frontal lobe exhibits mixed high and low signal intensities.",
+    "reference": "A mass-like abnormal signal is seen in the left frontal lobe, showing a slightly low signal on T1-weighted images, a slightly high signal on T2-weighted images, and a slightly high signal on FLAIR images. Post-contrast T1 imaging shows uneven marked enhancement. The lesion has clear boundaries and measures approximately 50*81*63 mm in size. There is peritumoral edema; however, there is no shift of midline structures.",
+    "modality_reference": "On FLAIR sequence, the lesion in the left frontal lobe exhibits slightly high signal intensity, alongside peritumoral edema. The boundaries of the lesion are clear, and no midline shift is observed.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00121-000",
+    "prediction": "The lesion in the left parietal lobe on FLAIR sequences exhibits mixed high and low signal intensities, with unclear boundaries. Surrounding brain parenchyma shows significant edema.",
+    "reference": "An irregular abnormal signal focus is observed in the left occipital lobe, presenting as a mixed signals of iso- and hypointensity on T1-weighted imaging, hyperintensity on T2-weighted imaging, mixed signals of hyper- and hypointensity on FLAIR, and markedly inhomogeneous enhancement on contrast-enhanced T1 (T1C), with an ill-defined boundary, measuring approximately 51*73*86mm. There is a substantial amount of vasogenic edema in the surrounding brain parenchyma, but no midline shift is observed.",
+    "modality_reference": "FLAIR images show the lesion with mixed signals of hyper- and hypointensity, which could be indicative of the complex nature of the lesion, possibly due to the presence of different tissue types or stages of bleeding.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00140-000",
+    "prediction": "On FLAIR sequences, the lesion in the left parietal lobe exhibits a hyperintense signal, with no associated edema or alterations in the midline structures.",
+    "reference": "An irregular abnormal signal focus is observed in the left parietal-occipital lobe, presenting as low signal with slight high signal on T1W, high signal on T2W and FLAIR, and significant 'ring-like' enhancement on T1C. The border is indistinct and the size is approximately 34*39*51 mm. Surrounding brain parenchyma exhibits edema, but there is no shift of midline structures.",
+    "modality_reference": "The abnormal signal focus on FLAIR sequence also shows high signal intensity indicating the presence of edema or other changes that may be causing increased signal in this region.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00206-000",
+    "prediction": "The lesion in the right frontal lobe exhibits a slightly hyperintense signal on FLAIR sequence, with the surrounding brain tissue showing edema.",
+    "reference": "At the junction of the right frontal and parietal lobes, there is an irregular abnormal signal focus. It presents with mixed iso- and hypointense signals on T1-weighted imaging, and mixed hyper- and hypointense signals on T2-weighted and FLAIR imaging. After contrast (T1C), there is significant ring-like enhancement. The borders are indistinct, and the size is approximately 38*48*43 mm. There is associated cerebral edema in the surrounding brain parenchyma, but no midline shift is observed.",
+    "modality_reference": "On FLAIR imaging, the lesion at the junction of the right frontal and parietal lobes displays mixed hyper- and hypointense signals and is approximately 38*48*43 mm in size. There is associated edema in the surrounding brain tissue, with no midline shift detected.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00242-000",
+    "prediction": "On FLAIR sequences, the lesion exhibits mixed high and low signal intensities, with unclear boundaries.",
+    "reference": "On the left parietal lobe and adjacent to the posterior horn of the lateral ventricle, there is a mass-like abnormal signal shadow, presenting as a low signal on T1-weighted imaging, a high signal on T2-weighted imaging, and a mixed low and high signal on FLAIR. There is marginal enhancement after contrast (T1C), with a clear border, measuring approximately 100*125*83 mm, and peritumoral edema is present. No midline shift is observed, and the left lateral ventricle is slightly compressed and narrowed.",
+    "modality_reference": "On FLAIR sequence, the lesion in the left parietal lobe near the posterior horn of the lateral ventricle exhibits mixed low and high signal intensity. There is peritumoral edema around the lesion. The findings regarding midline, surrounding brain tissue, ventricles, and cisterns are the same as described in the T1W and T2W sections.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00314-000",
+    "prediction": "On FLAIR sequence, the lesion in the right frontal-parietal lobe shows mixed high and low signal intensity. There is extensive edema in the surrounding brain tissue, and the right lateral ventricle is compressed by approximately 55*86*43 mm.",
+    "reference": "In the right frontal-parietal lobe and adjacent to the lateral ventricle, there is an observed mass with abnormal signal intensity. Specifically, it displays slightly low signal on T1-weighted images, iso- to high signal on T2-weighted images, and high signal on FLAIR images. After contrast (T1C), the mass shows uneven edge enhancement with clear boundaries. The size of the mass is approximately 42*58*41 mm. There is minimal peritumoral edema, and there is no shift of midline structures.",
+    "modality_reference": "On FLAIR images, a high signal intensity mass is identified in the right frontal-parietal lobe, next to the lateral ventricle, measuring approximately 42*58*41 mm. The mass has clear boundaries and is associated with slight peritumoral edema. There is no displacement of midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00320-000",
+    "prediction": "On FLAIR imaging, the lesion in the right temporal lobe shows mixed high and low signal intensities, with ill-defined boundaries and measures approximately 49*62*48mm. There is no observed effect on midline structures, sulci, gyri, ventricles, or cisterns.",
+    "reference": "In the posterior horn of the right lateral ventricle, a mass-like abnormal signal is seen, presenting with slightly low signal on T1-weighted images, slightly high signal on T2-weighted images, and slightly high signal on FLAIR. There is uneven enhancement post-contrast on T1-weighted images (T1C), with clear boundaries. The size is approximately 48*103*55 mm, with peritumoral edema. There is no midline shift.",
+    "modality_reference": "The lesion in the posterior horn of the right lateral ventricle shows a slightly hyperintense signal on FLAIR imaging, with clear demarcation and surrounding edema. No midline shift is seen.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00351-000",
+    "prediction": "The lesion in the right temporal lobe shows mixed high and low signal intensities on FLAIR imaging, indicating a complex tissue structure with extensive edema in the surrounding brain tissue. There is no evidence of midline shift, indicating that there is a large edema in the surrounding brain tissue.",
+    "reference": "In the right temporal lobe, there is a mass-like abnormal signal shadow, showing slightly low signal on T1-weighted images (T1W), high signal on T2-weighted images (T2W), and mixed signal on FLAIR sequences. After contrast administration (T1C), it displays heterogeneous enhancement. The boundary is well-defined, with dimensions approximately 63*97*73 mm. There is peritumoral edema. Midline structures are shifted to the left, and the right lateral ventricle is compressed and narrowed.",
+    "modality_reference": "The right temporal lobe lesion exhibits a mixed signal intensity on FLAIR sequences, clearly demarcated, sized approximately 63*97*73 mm, with surrounding edema.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00376-000",
+    "prediction": "The lesion in the right parietal lobe exhibits a low signal intensity, with surrounding brain parenchyma edema. The midline structures remain unaffected.",
+    "reference": "A mass-like abnormal signal is visible in the left parietal lobe, presenting as a slightly hypointense signal on T1-weighted images, slightly hyperintense on T2-weighted images, and hypointense on FLAIR sequences. Post-contrast T1-weighted images show peripheral enhancement of the mass, which has clear boundaries and measures approximately 53*55*51mm. There is surrounding edema, but no midline shift detected.",
+    "modality_reference": "On FLAIR sequences, the lesion in the left parietal lobe shows a hypointense signal without affecting adjacent brain tissues and without causing a shift in the midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00401-000",
+    "prediction": "On FLAIR sequences, the lesion in the left frontal lobe shows mixed high and low signal intensities, with extensive surrounding brain parenchymal edema, compression of the frontal horns of the bilateral lateral ventricles, and a deviation of midline structures to the right.",
+    "reference": "A mass-like abnormal signal shadow can be seen in the left frontal lobe, showing a slightly low signal on T1W, high signal on T2W, and slightly high signal on FLAIR. There is non-uniform enhancement of the edges on T1C, with clear boundaries, measuring approximately 80*97*61 mm. Significant peritumoral edema is present. Midline structures are shifted to the right, with compression and narrowing of the anterior horns of both lateral ventricles.",
+    "modality_reference": "Slightly high signal intensity is observed in the lesion within the left frontal lobe on FLAIR sequence, suggesting edematous changes and disturbance in the nearby brain parenchyma. Midline structures are displaced to the right.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00416-000",
+    "prediction": "The lesion in the right temporal lobe presents with mixed high and low signal intensities on FLAIR sequences, which might represent a combination of high and low signal intensities.",
+    "reference": "Irregular abnormal signal foci are seen in the right basal ganglia region and the frontotemporal insular lobe, showing low signal on T1W with a slight high signal, mixed high and low signal on T2W and FLAIR, and significant ring-like enhancement on T1C. The margins are not clear, and the approximate size is 71*130*91 mm. There is extensive edema in the surrounding brain parenchyma, compression of the right lateral ventricle, and left deviation of the midline structures.",
+    "modality_reference": "Mixed high and low signal intensities are noted within the irregular lesion in the right basal ganglia and frontotemporal insular lobe on FLAIR MRI sequence. There is evidence of extensive edema in the surrounding brain tissue, causing compression of the right lateral ventricle and deviation of the midline structures to the left.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00444-000",
+    "prediction": "On the FLAIR sequence, the lesion in the left basal ganglia region shows mixed signal intensity. The surrounding brain parenchyma shows edema.",
+    "reference": "A mass-like abnormal signal is visible adjacent to the left lateral ventricle, demonstrating slightly low signal on T1W images, slightly high signal on T2W and FLAIR images, with uneven enhancement post-contrast on T1C. The lesion has clear boundaries and measures approximately 40*37*48 mm, with mild surrounding edema. The midline structures are displaced to the right, and the posterior horn of the left lateral ventricle is compressed and narrowed.",
+    "modality_reference": "On FLAIR sequences, the lesion adjacent to the left lateral ventricle is slightly hyperintense with mild surrounding edema. The posterior horn of the left lateral ventricle is compressed and narrowed.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00445-000",
+    "prediction": "The lesion in the left temporal lobe and the left occipital lobe exhibits mixed high and low signal intensities on FLAIR sequences.",
+    "reference": "A mass-like abnormal signal shadow can be seen in the left parietal-temporal lobe, presenting with a slightly low signal on T1-weighted images, slightly high signal on T2-weighted images, and slightly high signal on FLAIR. After contrast (T1C), there is uneven enhancement. The mass has a clear boundary and measures approximately 90*118*86mm. There is peritumoral edema. The midline structures are shifted to the right, and the posterior horn of the left lateral ventricle is compressed and narrowed.",
+    "modality_reference": "On FLAIR sequences, the left parietal-temporal lobe mass shows slightly high signal intensity with associated peritumoral edema.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00453-000",
+    "prediction": "On FLAIR imaging, the lesion in the left parietal lobe exhibits mixed high and low signal intensities. The lesion measures approximately 43*47*78 mm and there is no indication of edema or impact on the surrounding brain tissue.",
+    "reference": "A mass-like abnormal signal is observed in the left parietal lobe, exhibiting slightly low signal on T1-weighted imaging, slightly high signal on T2-weighted imaging, and slightly high signal on FLAIR. There is uneven, mild enhancement post-contrast on T1C, with a clear boundary. The dimensions are approximately 51*64*69 mm. There is peritumoral edema. The midline structures are slightly deviated to the right, and the posterior horn of the left lateral ventricle is compressed and narrowed.",
+    "modality_reference": "The lesion in the left parietal lobe shows a slightly high signal on FLAIR, with a clear boundary and associated peritumoral edema.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00496-000",
+    "prediction": "The lesion in the right temporal lobe exhibits a slightly hyperintense signal on FLAIR sequence, with associated perilesional edema. No midline shift is noted.",
+    "reference": "An abnormal signal focus is seen in the right temporal lobe, presenting as isointense on T1-weighted images, hyperintense on T2-weighted and FLAIR images, with obvious nodular enhancement after gadolinium contrast (T1C), and unclear boundaries. The dimensions are approximately 55*76*43 mm. Extensive brain edema is present in the surrounding brain parenchyma, with no significant shift of midline structures.",
+    "modality_reference": "The lesion in the right temporal lobe is hyperintense on FLAIR images, indicating extensive surrounding brain parenchymal edema. There is no significant midline shift.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00542-000",
+    "prediction": "On FLAIR sequence, the lesion in the left temporal lobe shows mixed high and low signal intensity. There is significant surrounding edema and a mild shift of midline structures to the right.",
+    "reference": "A mass-like abnormal signal is seen in the left frontal-temporal lobe, presenting as a low signal on T1-weighted imaging and a slightly high mixed signal on T2-weighted and FLAIR imaging, with uneven enhancement on T1 with contrast. The lesion has well-defined boundaries and measures approximately 55*98*58 mm, with surrounding edema. No midline shift is evident.",
+    "modality_reference": "The lesion in the left frontal-temporal lobe shows a slightly high mixed signal intensity on FLAIR imaging with clear boundaries. Surrounding edema is present, but there are no reports of influence on brain structures such as the midline, sulci, gyri, ventricles, or cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00599-000",
+    "prediction": "On FLAIR imaging, the lesion in the right frontal cranial plate shows mixed high and low signal intensities. There is peritumoral edema and a mild leftward shift of the midline structures.",
+    "reference": "A mass-like abnormal signal is seen in the right frontal lobe, exhibiting a slightly low signal on T1-weighted imaging (T1W), a slightly high signal on T2-weighted imaging (T2W), and a slightly high signal on Fluid-Attenuated Inversion Recovery (FLAIR). After contrast (T1C), there is uneven mild enhancement. The mass has a clear boundary and measures approximately 59*88*66mm. There is peritumoral edema. The midline structures are shifted to the left, and the anterior horn of the right lateral ventricle is compressed and narrowed.",
+    "modality_reference": "On Fluid-Attenuated Inversion Recovery (FLAIR) imaging, the mass in the right frontal lobe shows slightly high signal intensity and is associated with surrounding edema.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00676-001",
+    "prediction": "The lesion located in the right frontal parietal lobe presents with mixed high and low signal intensities on FLAIR imaging. The lesion measures approximately 43*63*47 mm. There is no observed alteration in the surrounding brain tissue or the midline structures.",
+    "reference": "Irregular abnormal signal foci can be seen in the left frontal lobe, periventricular area, and the body of the corpus callosum, crossing the midline. They exhibit low signal on T1W with a hint of high signal, mixed high and low signal on T2W and FLAIR sequences. Prominent ring-like enhancement is noted on T1C with unclear boundaries. The dimensions of the lesion are approximately 63*60*62 mm. The surrounding brain parenchyma shows significant edema; the lateral ventricle is compressed with a slight rightward shift of the midline structures.",
+    "modality_reference": "On FLAIR MRI sequence, the lesion shows mixed signal intensities.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00728-000",
+    "prediction": "The lesion in the left temporal lobe shows a mixed high and low signal intensity on FLAIR sequences, with some areas of high signal intensity.",
+    "reference": "A nodular abnormal signal shadow can be seen in the left basal ganglia area, showing slightly low signal on T1-weighted images, slightly high signal on T2-weighted images, and slightly high signal on FLAIR, with marked enhancement on T1 contrast, clear boundaries, measuring approximately 32*60*48 mm, with flaky peritumoral edema. There is no shift of midline structures.",
+    "modality_reference": "On FLAIR images, the lesion in the left basal ganglia area demonstrates a slightly high signal, clear boundaries, and is associated with flaky edema surrounding the tumor. There is no displacement of midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00737-000",
+    "prediction": "On FLAIR imaging, the lesion in the left frontal temporal lobe exhibits mixed high and low signal intensities. There is no evidence of midline shift or changes in the sulci, gyri, ventricles, and cisterns.",
+    "reference": "In the left frontal lobe, basal ganglia region, and adjacent to the lateral ventricle, there is a mass-like abnormal signal shadow. It presents as low signal on T1-weighted images, slightly high signal on T2-weighted images, and slightly high signal on FLAIR sequences. After contrast enhancement (T1C), there is uneven enhancement around the margins of the lesion, which are well-defined. The size of the lesion is approximately 44*56*42mm and there is edema around the tumor. There is no midline shift observed.",
+    "modality_reference": "On FLAIR sequences, the mass also exhibits slightly high signal intensity, suggesting associated changes such as edema or gliosis in the surrounding brain parenchyma. There is no noted effect on midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00742-000",
+    "prediction": "On FLAIR sequences, the lesion in the right parietal lobe and the splenium of the corpus callosum shows mixed high and low signal intensities, with extensive edema in the surrounding brain tissue.",
+    "reference": "At the junction of the right frontal and parietal lobes, there is an irregular abnormal signal focus which appears hypointense on T1W, hyperintense on T2W and FLAIR sequences, and demonstrates significant ring-like enhancement on T1C. The lesion's dimensions are approximately 88*117*86mm. There is extensive edema in the surrounding brain parenchyma, compression of the right lateral ventricle, and a shift of the midline structures to the left.",
+    "modality_reference": "The lesion is located at the junction of the right frontal and parietal lobes and is hyperintense on FLAIR sequence. Its borders are indistinct and it measures about 88*117*86mm. There is extensive surrounding cerebral edema, causing compression on the right lateral ventricle, and shifting of midline structures to the left.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00758-000",
+    "prediction": "The lesion in the left temporal lobe presents with a mixed signal intensity on FLAIR sequences, with no discernible impact on the midline structures.",
+    "reference": "A mass-like abnormal signal is observed within the posterior horn of the left lateral ventricle, presenting as iso- to hypointense on T1W images, mixed signal intensity on T2W images, and mixed signal intensity on FLAIR images. There is uneven enhancement post-contrast on T1C images, with clear boundaries and dimensions approximately 42*64*37mm, including peritumoral edema. There is no midline shift.",
+    "modality_reference": "On FLAIR sequences, the lesion within the posterior horn of the left lateral ventricle shows mixed signal intensity, has defined boundaries, and is associated with peritumoral edema. There is no midline shift observed.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00820-000",
+    "prediction": "On FLAIR sequence, the lesion in the right frontal-occipital lobe presents with mixed high and low signal intensities. There is associated perilesional edema, and the right lateral ventricle is compressed.",
+    "reference": "Multiple irregular abnormal signal foci are found in the right frontal lobe, basal ganglia region, pons, and brainstem, which appear as iso- to hypointense on T1-weighted images, and hyperintense on T2-weighted and FLAIR images. Post-contrast T1 images show marked patchy and ring-like enhancement, with unclear boundaries, measuring approximately 66*45*77 mm. Surrounding brain parenchymal edema is present, with compression of the right lateral ventricle, and mild leftward shift of the midline structures.",
+    "modality_reference": "Hyperintense signals of the lesion in the right frontal lobe, basal ganglia region, pons, and brainstem on FLAIR images suggest an abnormality likely associated with edema. The right lateral ventricle is compressed due to the surrounding edema, with midline structures displaced slightly to the left.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00838-000",
+    "prediction": "On FLAIR sequences, the lesion in the right frontal temporal lobe shows significant mixed high and low signal intensities. There is significant peritumoral edema and compression of the right lateral ventricle.",
+    "reference": "Multiple clustered abnormal signal shadows are seen in the right frontal lobe, basal ganglia area, and beside the lateral ventricle, exhibiting slightly low signal on T1-weighted images, slightly high signal on T2-weighted images, and slightly high signal on FLAIR. On T1C (post-contrast T1-weighted imaging), the lesion shows uneven marginal enhancement with clear boundaries, measuring approximately 66*92*66mm, with peritumoral edema. There is a leftward shift of midline structures, and the right lateral ventricle is compressed and narrowed.",
+    "modality_reference": "The FLAIR sequence also shows these clustered lesions with slightly high signal intensity, indicating edema in the surrounding brain tissue.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-00840-000",
+    "prediction": "On FLAIR sequences, the lesions show mixed high and low signal intensities, with both significant surrounding brain parenchymal edema and compression of the left lateral ventricle.",
+    "reference": "A mass-like abnormal signal is seen in the left frontal lobe, presenting as a low signal on T1-weighted images, a high signal on T2-weighted images, and slightly low signal on FLAIR images. The lesion demonstrates uneven enhancement on T1 post-contrast images, with indistinct boundaries, measuring approximately 80*91*82mm, with surrounding edema. No midline shift is observed.",
+    "modality_reference": "A slightly low signal is observed in the lesion of the left frontal lobe on FLAIR images, with indistinct boundaries, and surrounding edema. There is no midline shift.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01016-000",
+    "prediction": "On FLAIR sequence, the lesion in the left temporal lobe shows mixed high and low signal intensity, indicating possible edema or gliosis. The left lateral ventricle is slightly compressed due to the presence of the lesion.",
+    "reference": "A cluster of abnormal signals is visible in the left temporal lobe, which presents as slightly hypointense on T1-weighted images (T1W), hyperintense on T2-weighted images (T2W), and hyperintense on FLAIR images. Enhancement is uneven after T1 contrast (T1C), and the boundaries are not well defined. The lesion measures approximately 58*95*61 mm, with peritumoral edema. There is no midline shift.",
+    "modality_reference": "On FLAIR imaging, the lesion in the left temporal lobe also shows hyperintense signal, which helps in suppressing the fluid signals to better visualize the abnormal lesion.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01017-000",
+    "prediction": "On FLAIR imaging, the lesion in the right frontal temporal lobe displays a mixed signal intensity. There is extensive peritumoral edema and a shift of midline structures to the left.",
+    "reference": "A mass-like abnormal signal is visible in the right frontal lobe, presenting as a slightly low signal on T1W imaging, slightly high signal on T2W imaging, and slightly high signal on FLAIR imaging. There is uneven enhancement post-contrast (T1C). The lesion has clear boundaries and measures approximately 55*93*69 mm. There is peritumoral edema. The midline structures are shifted to the left.",
+    "modality_reference": "In the right frontal lobe, the lesion exhibits slightly high signal intensity on FLAIR imaging, clear boundaries, and peritumoral edema. Midline structures are displaced to the left.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01050-000",
+    "prediction": "On FLAIR sequences, the lesion in the left parietal lobe and the adjacent brain tissue shows mixed high and low signal intensities. The largest lesion is located in the left temporal lobe, with surrounding brain parenchyma edema and compression of the posterior horn of the left lateral ventricle.",
+    "reference": "Irregular abnormal signal foci can be observed in the left occipital lobe and thalamus, exhibiting low signal on T1W with a slight high signal, mixed high and low signals on T2W and FLAIR, and uneven enhancement on T1C. The border is indistinct, and the size is approximately 39*89*55mm. There is significant edema of the surrounding brain parenchyma, compression of the left lateral ventricle, and deviation of midline structures to the right.",
+    "modality_reference": "On FLAIR sequence, the lesion in the left occipital lobe and thalamus shows mixed signal intensities, with high and low signal regions present, accompanied by extensive edema in the adjacent brain parenchyma.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01111-000",
+    "prediction": "On FLAIR sequences, the lesion in the left frontal temporal lobe exhibits mixed high and low signal intensities, with surrounding brain parenchymal edema.",
+    "reference": "There is a mass-like abnormal signal shadow seen in the left frontal-parietal-temporal lobe, the basal ganglia region, and next to the lateral ventricle, which displays mixed high-low signal on T1-weighted images, mixed high-low signal on T2-weighted images, and mixed high-low signal on FLAIR images. There is inhomogeneous enhancement post T1 contrast, with a clear boundary, measuring approximately 62*99*99 mm. Peritumoral edema is present. There is no shift in midline structures, and the left lateral ventricle is slightly compressed and narrowed.",
+    "modality_reference": "On FLAIR imaging, the lesion at the left frontal-parietal-temporal lobe, basal ganglia region, and near the lateral ventricle shows mixed high-low signal intensity. There is a distinct boundary around the lesion, which measures approximately 62x99x99 mm in size. Peritumoral edema is present, and the left lateral ventricle is mildly compressed and narrowed, with no midline shift detected.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01120-000",
+    "prediction": "On FLAIR sequences, the lesion in the left frontal-temporal lobe shows mixed high and low signal intensities, with extensive edema in the surrounding brain parenchyma.",
+    "reference": "An irregular abnormal signal focus is visible in the left frontal-opercular and basal ganglia region, exhibiting low signal on T1W with a small amount of high signal, high signal on T2W and FLAIR, and marked ring-like enhancement on T1C. The boundary is poorly defined with approximate dimensions of 63*93*64 mm. Surrounding brain parenchyma shows edema, the left lateral ventricle is compressed, and there is a shift of midline structures to the right.",
+    "modality_reference": "On FLAIR sequences, the lesion in the left frontal-opercular and basal ganglia region appears hyperintense. The lesion's poorly defined margins and the associated edematous changes in the adjacent brain parenchyma contribute to the compression of the left lateral ventricle and displacement of midline structures to the right.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01144-000",
+    "prediction": "On FLAIR sequence, the lesion at the junction of the right frontal and parietal lobes displays mixed high and low signal intensities. The surrounding brain parenchyma shows extensive edema, and the right lateral ventricle is compressed.",
+    "reference": "A mass-like abnormal signal is observed in the right parietal lobe, presenting with a slightly hypointense signal on T1-weighted images, isointense to hyperintense signal on T2-weighted images, and slightly hyperintense signal on FLAIR. There is inhomogeneous enhancement on post-contrast T1 images. The lesion is clearly demarcated with dimensions of approximately 55*67*70 mm, and is associated with peritumoral edema. There is no shift in the midline structures, and the posterior horn of the right lateral ventricle is slightly compressed and narrowed.",
+    "modality_reference": "On FLAIR sequencing, the lesion in the right parietal lobe shows a slightly hyperintense signal, with clear boundaries and surrounding edema. There is no shift of midline structures, and except for mild compression and narrowing of the posterior horn of the right lateral ventricle, other brain structures appear normal.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01182-000",
+    "prediction": "On FLAIR imaging, the lesion in the right frontal lobe exhibits a mixed high and low signal intensities, with extensive edema in the surrounding brain parenchyma. The midline structures are compressed and narrowed.",
+    "reference": "On the right frontal lobe, an irregular abnormal signal focus is observed, showing low signal on T1W, high signal on T2W and FLAIR, with obvious speckled enhancement on T1C. The borders are not well defined, and the size is approximately 89*124*96 mm. Surrounding brain parenchyma shows edema, the anterior horn of the right lateral ventricle is compressed, and there is a leftward shift of midline structures.",
+    "modality_reference": "The lesion in the right frontal lobe is hyperintense on FLAIR sequences, with surrounding brain parenchyma edema.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01197-000",
+    "prediction": "On FLAIR imaging, the lesion in the left parietal occipital lobe shows a mixed high and low signal, indicative of edema and heterogeneous tissue types within the lesion. The adjacent brain parenchyma shows extensive edema.",
+    "reference": "A mass-like abnormal signal shadow can be seen in the left parietal lobe, presenting with mixed signals on T1-weighted, T2-weighted, and FLAIR sequences. It shows uneven mild enhancement on T1-contrast, with a clear boundary and dimensions of approximately 62*82*76mm. There is surrounding edema. No midline shift is present.",
+    "modality_reference": "On FLAIR sequences, the left parietal lobe lesion exhibits mixed signal intensity with clear margins. Peripheral edema is evident. The midline structures remain unshifted.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01238-000",
+    "prediction": "On the FLAIR sequence, the lesion in the right parietal lobe displays mixed high and low signal intensities. The surrounding brain tissue shows extensive edema, and the posterior horn of the right lateral ventricle is compressed.",
+    "reference": "A mass-like abnormal signal is observed in the right parieto-occipital lobe, showing slightly low signal on T1-weighted images, slightly high signal on T2-weighted images, and slightly high signal on FLAIR. Post-contrast T1 imaging shows uneven enhancement. The lesion has a clear boundary and measures approximately 55*94*88mm, with perilesional edema. There is no midline shift. The posterior horn of the right lateral ventricle is mildly compressed and narrowed.",
+    "modality_reference": "On FLAIR imaging, a slightly hyperintense signal is observed in the lesion located in the right parieto-occipital lobe, accompanied by perilesional edema without midline shift.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01355-000",
+    "prediction": "On FLAIR sequence, the lesion in the left temporal lobe shows mixed high and low signal intensity. There is extensive perilesional edema in the surrounding brain tissue, and the left lateral ventricle is compressed with a mild shift of midline structures.",
+    "reference": "A mass-like abnormal signal is observable in the left temporal lobe. It appears as a slightly hypointense signal on T1W, hyperintense signal on T2W, iso- to hyperintense signal on FLAIR, with uneven enhancement post-contrast (T1C). The mass has well-defined boundaries, measuring approximately 59*81*67mm, with peritumoral edema. There is rightward deviation of midline structures and compression with narrowing of the left lateral ventricle.",
+    "modality_reference": "In FLAIR imaging, the lesion in the left temporal lobe gives an iso- to hyperintense signal with clear demarcation. There is peritumoral edema noted, and it affects the surrounding brain tissue by pushing the midline structures to the right and compressing the left lateral ventricle.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01365-000",
+    "prediction": "The lesion in the right frontal parietal lobe is slightly hyperintense on FLAIR sequence, with surrounding brain parenchyma edema. The midline structures are slightly displaced.",
+    "reference": "At the junction of the right frontal and parietal lobes, an irregular abnormal signal focus is observed. It presents as iso-signal on T1W, hyperintense on T2W and FLAIR, and demonstrates significant uneven enhancement on T1C. The boundary is ill-defined, with a size of approximately 42*78*41 mm. There is surrounding brain parenchymal edema, but no midline shift.",
+    "modality_reference": "On FLAIR sequences, the lesion at the junction of the right frontal and parietal lobes is hyperintense. Edema involving the surrounding brain tissue is present. No disruption of the midline structures is reported.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01431-000",
+    "prediction": "On the FLAIR sequence, the lesion in the right temporal lobe exhibits mixed high and low signal intensities. There is no evidence of midline shift or changes in the sulci, gyri, ventricles, and cisterns.",
+    "reference": "A mass-like abnormal signal is visible in the right thalamus, exhibiting slightly low signal on T1-weighted images, slightly high signal on T2-weighted images and FLAIR images, and uneven enhancement on T1 contrast. The lesion has a clear boundary and measures approximately 55*53*49 mm with peritumoral edema. There is a leftward shift of the midline structures.",
+    "modality_reference": "On FLAIR sequence, there is slightly high signal intensity in the right thalamus lesion, with peritumoral edema and affectation on the midline structures, indicated by their leftward deviation.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01479-000",
+    "prediction": "On FLAIR imaging, the lesion in the right frontal lobe shows a slightly hyperintense signal, indicative of significant edema or vascularity. The lesion's boundaries are unclear, and there is evidence of impending brain tissue compression and narrowing of the right lateral ventricle.",
+    "reference": "A mass-like abnormal signal is visible in the right frontal lobe, presenting as isointense to hypointense on T1W, mixed signal intensity on T2W, mixed signal intensity on FLAIR, with non-uniform enhancement post-contrast (T1C). The margin is indistinct. The size is approximately 92*86*82 mm. There is slight surrounding edema. The midline structures are deviated to the left, and the bilateral lateral ventricles are compressed and narrowed.",
+    "modality_reference": "On FLAIR sequence, the lesion in the right frontal lobe also presents as mixed signal intensity, with slight surrounding edema, shifting of midline structures to the left, and compression of the bilateral lateral ventricles.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01480-000",
+    "prediction": "On FLAIR sequences, the lesions in the left temporal lobe and hippocampus display mixed high and low signal intensities, with the larger lesion in the left hippocampus showing a mixed signal intensity.",
+    "reference": "An irregular abnormal signal focus is observed in the left temporal lobe and hippocampal region, presenting as isointense signal on T1-weighted imaging, mixed high and low signal on T2-weighted and FLAIR sequences, with localized patchy enhancement on T1 post-contrast imaging. The boundaries are ill-defined, and the size is approximately 54*74*45 mm. There is extensive edema in the surrounding brain parenchyma, mild compression of the left lateral ventricle, and no shift in midline structures.",
+    "modality_reference": "The lesion exhibits mixed high and low signal intensity on the FLAIR sequence in the left temporal lobe and hippocampal region. It is associated with extensive edema in the adjacent brain tissue.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01519-000",
+    "prediction": "On FLAIR sequences, the lesion in the left frontal lobe exhibits isointense signal, measuring approximately 39*62*51 mm. There is no evidence of midline shift or alterations in the sulci, gyri, ventricles, or cisterns.",
+    "reference": "A mass-like abnormal signal is observed in the left parietal lobe, presenting as slightly hypointense on T1-weighted images, slightly hyperintense on T2-weighted images, and slightly hyperintense on FLAIR. Post-contrast T1 images show uneven enhancement. The lesion has clear boundaries and measures approximately 51*51*51 mm, with surrounding edema. No midline shift is observed.",
+    "modality_reference": "On FLAIR imaging, the lesion in the left parietal lobe is slightly hyperintense, with edema observable around the lesion. The lesion boundaries are clear, and no midline shift is noted. Sulci, gyri, ventricles, and cisterns are unchanged.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-GLI-01535-000",
+    "prediction": "On Fluid Attenuated Inversion Recovery (FLAIR) MRI sequence, the left basal ganglia and temporal lobe show multiple irregular foci with mixed high and low signal intensity.",
+    "reference": "Irregular abnormal signal foci can be seen in the left frontal-opercular-temporal lobe, presenting as low signal on T1-weighted imaging (T1W), high signal on T2-weighted imaging (T2W) and Fluid Attenuated Inversion Recovery (FLAIR), with marked ring-like enhancement on contrast (T1C). The boundaries are not clearly defined, with an approximate size of 55*62*54 mm. Perilesional brain parenchyma shows edema, without any shift of midline structures.",
+    "modality_reference": "The lesion in the left frontal-opercular-temporal lobe also demonstrates high signal intensity on FLAIR sequence, with vague boundaries and surrounding brain parenchymal edema. There is no shift in the midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00018-000",
+    "prediction": "On FLAIR imaging, the lesion in the right frontal lobe shows high signal intensity. It is associated with extensive edema in the surrounding brain tissue.",
+    "reference": "A mass-like abnormal signal focus can be seen in the right frontal lobe, showing a slightly low signal on T1W, slightly high signal on T2W, high signal on FLAIR, with evident enhancement on T1C, however, the enhancement is not uniform. The size is approximately 80*124*88mm. Surrounding the lesion, a cerebrospinal fluid cleft and a large area of non-enhancing edema can be seen. The right lateral ventricle is compressed. There is a slight leftward shift of midline structures.",
+    "modality_reference": "On FLAIR imaging, the lesion in the right frontal lobe exhibits a high signal.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00074-005",
+    "prediction": "The lesion located adjacent to the posterior longitudinal fissure in the brain has slightly hyperintense signal on FLAIR imaging.",
+    "reference": "An abnormal signal nodule is visible on the left side behind the falx cerebri, presenting with isointense signal on T1-weighted images, slightly hyperintense signal at the center and hypointense signal at the edges on T2-weighted images, mixed-signal on FLAIR sequence, and significant enhancement after contrast administration with clear boundaries, measuring approximately 15*13*16 mm. No midline shift is observed.",
+    "modality_reference": "The lesion behind the falx cerebri on the left side displays a mixed signal on FLAIR sequence. No alterations in adjacent brain tissues or midline shift, and the integrity of sulci, gyri, ventricles, and cisterns is maintained.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00138-000",
+    "prediction": "The lesion in the right temporal lobe appears slightly hyperintense on FLAIR sequence, with dimensions of approximately 23*31*21mm. There is no evidence of alteration of the surrounding brain tissue, and there is no evidence of alterations in the midline structures, sulci, gyri, ventricles, or cisterns.",
+    "reference": "A patchy abnormal signal is seen at the base of the right middle cranial fossa, displaying isointense signal on T1-weighted and T2-weighted images, slightly hyperintense signal on FLAIR sequence, with significant enhancement of the lesion on T1 post-contrast, measuring approximately 30*42*13 mm. No midline shift is observed.",
+    "modality_reference": "Slight hyperintense signal is noted in the lesion at the base of the right middle cranial fossa on the FLAIR sequence.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00183-000",
+    "prediction": "The lesion in the left temporal lobe demonstrates a slightly hyperintense signal on FLAIR imaging, indicating more severe edema or blood-brain barrier disruption. The mechanism behind the damage remains unclear, and no specific changes in the midline structures, sulci, gyri, ventricles, or cisterns are noted.",
+    "reference": "An abnormal signal nodule can be seen at the base of the left middle cranial fossa, exhibiting iso-intense signals on T1W and T2W, slightly hyperintense on FLAIR, and the lesion shows obvious enhancement after T1C contrast administration. The boundary is clear, and the size is approximately 8*13*8 mm. There is no midline shift.",
+    "modality_reference": "The lesion at the base of the left middle cranial fossa appears slightly hyperintense on FLAIR sequences, indicating a distinct boundary. There is no apparent edema, nor any indication of effect on surrounding brain tissues, midline, sulci, gyri, ventricles, or cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00225-000",
+    "prediction": "On FLAIR imaging, the lesion in the left temporal region exhibits hyperintense signal, with no noted alteration in midline structures, sulci, gyri, ventricles, or cisterns.",
+    "reference": "A small nodular lesion is visible inferior to the skull plate at the left temporal pole, exhibiting isointense signal on T1-weighted images, slightly hyperintense on T2-weighted images, hyperintense on FLAIR, and shows significant uniform enhancement with contrast on T1. The lesion has a clear boundary and presents with a meningeal tail sign, measuring approximately 16*26*25mm. No midline shift is observed.",
+    "modality_reference": "The left temporal pole lesion appears hyperintense on FLAIR imaging, indicating a clear boundary and absence of surrounding brain tissue edema, with no midline shift, and no apparent effect on sulci, gyri, ventricles, or cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00269-000",
+    "prediction": "The lesion in the left frontal lobe exhibits high signal intensity on FLAIR sequence, with no observed shift of midline structures.",
+    "reference": "At the junction of the left frontal and parietal bones, beneath the calvarium, there is a mass-like abnormal signal shadow visible, displaying isointense signal on T1-weighted (T1W) and T2-weighted (T2W) images, slightly hyperintense signal on Fluid-attenuated inversion recovery (FLAIR), and marked enhancement on T1 post-contrast (T1C), measuring approximately 32*31*36mm. There is no shift of midline structures.",
+    "modality_reference": "The lesion at the junction of the left frontal and parietal bones exhibits a slightly hyperintense signal on FLAIR imaging, measuring approximately 32*31*36mm, with no midline shift detected.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00286-000",
+    "prediction": "The lesion below the central junction of the brain presents with a high signal intensity on FLAIR sequences, indicating a high vascularity or breakdown of the blood-brain barrier.",
+    "reference": "A mass-like abnormal signal shadow is visible adjacent to the falx cerebri in the right frontal lobe, showing low signal on T1W, isointense signal on T2W, slightly hyperintense signal on FLAIR, and mild enhancement on T1C. The lesion has well-defined boundaries, with dimensions of approximately 26*32*17mm. There is no midline shift.",
+    "modality_reference": "On the FLAIR sequence, the lesion adjacent to the falx cerebri in the right frontal lobe presents with a slightly hyperintense signal and well-defined boundaries. There is no associated edema or impact on adjacent brain structures, and the midline remains unaffected.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00342-000",
+    "prediction": "On FLAIR imaging, the lesion in the right frontal lobe shows hyperintense signal, indicating the presence of edema or gliosis. There is no observed alteration in the midline structures.",
+    "reference": "A mass-like abnormal signal shadow is visible adjacent to the falx cerebri on the right frontal parietal region, exhibiting isointense signal on T1-weighted images (T1W), mixed signal on T2-weighted images (T2W) and Fluid-Attenuated Inversion Recovery (FLAIR) sequences. Post-contrast enhancement shows uneven enhancement of the lesion with a non-enhanced small area in the center, approximately 40*42*41 mm in size; An abnormal signal nodule is also visible adjacent to the falx cerebri in the right frontal region, presenting isointense signals on T1W, T2W and slightly hyperintense signal on FLAIR. Post-contrast enhancement shows significant uniform enhancement. No midline shift is observed.",
+    "modality_reference": "The mass-like lesion in the right frontal parietal region presents mixed signal intensity and the nodule in the right frontal region shows slightly hyperintense signal. There is no midline shift, and no apparent effect on the surrounding brain tissue is described.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00380-000",
+    "prediction": "The lesion in the right parietal region exhibits an slightly hyperintense signal on FLAIR sequences, indicating a potential lesion's edema or effect on surrounding brain tissue. No alterations to the midline structures, sulci, gyri, ventricles, and cisterns are noted.",
+    "reference": "A mass-like abnormal signal intensity is observed adjacent to the falx cerebri in the left parietal region, presenting as isointense to low signal on T1-weighted imaging, slightly hyperintense signal on T2-weighted imaging, hyperintense signal on FLAIR sequence, and exhibits significant enhancement on T1 post-contrast imaging. The size of the lesion is approximately 26*29*32 mm. No midline shift is noted.",
+    "modality_reference": "A hyperintense signal lesion is present on the FLAIR sequence in the same location near the falx cerebri of the left parietal region. Again, no midline shift or changes in the adjacent brain parenchyma are described.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00415-000",
+    "prediction": "The lesion in the left frontal lobe is hyperintense with unclear boundaries, measuring about 76*88*85mm. There is extensive surrounding brain parenchyma edema, compression of the lateral ventricle, and a deviation of the midline structures to the right.",
+    "reference": "A mass of abnormal signal shadow can be seen under the left frontal cranial plate, with an irregular shape, partially crossing the midline, displaying isointense signal on T1-weighted imaging, slightly hyperintense on T2-weighted imaging, slightly hyperintense on FLAIR sequence imaging. Around the lesion, a large area of edema is visible, and the lesion shows evident, uneven enhancement on T1C imaging. The adjacent meninges and falx cerebri appear thickened, with approximate dimensions of 77*90*74mm. The left lateral ventricle is compressed with a rightward shift of midline structures.",
+    "modality_reference": "The FLAIR sequence reveals the lesion to be slightly hyperintense with a surrounding large area of edema.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00423-000",
+    "prediction": "On FLAIR sequence, the lesion beneath the right cranial longitudinal fissure shows a hyperintense signal, with no midline shift observed, and no noted disruption to surrounding brain tissue.",
+    "reference": "A small nodule is visible adjacent to the falx cerebri at the junction of the left frontal and parietal lobes, showing isointense signal on T1-weighted images, slightly hyperintense signal on T2-weighted images, hyperintense signal on FLAIR, and significant enhancement on T1 post-contrast images. The nodule has a clear boundary, measuring approximately 10*14*20 mm. There is no midline shift.",
+    "modality_reference": "On FLAIR sequence, the nodule shows a hyperintense signal, indicating increased fluid content or possible edema within or surrounding the nodule. No alterations in midline structures, or mention of sulci, gyri, ventricles, or cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00451-000",
+    "prediction": "The lesion in the right temporal region appears hyperintense on the FLAIR sequence, indicating a small amount of edema or breakdown of the blood-brain barrier. There is no noted displacement of midline structures.",
+    "reference": "A small lesion with an abnormal signal is visible near the large foramen of the occipital bone on the right side of the posterior cranial fossa, presenting as isointense on T1W, and slightly hyperintense on T2W and FLAIR sequences. After enhancement, there is obvious strengthening with dimensions of approximately 25*34*26mm; the medulla oblongata shows an abnormal signal, presenting as hypointense on T1W and hyperintense on T2W and FLAIR sequences, with no obvious enhancement after contrast. The midline structures are not displaced.",
+    "modality_reference": "On FLAIR sequences, the abnormal signal in the lesion and the medulla oblongata appears slightly hyperintense, without evidence of significant surrounding edema or impact on adjacent brain structures. There is also no midline shift observed.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00468-000",
+    "prediction": "On FLAIR sequences, the lesion in the left temporal lobe shows a mixed high signal intensity, with the surrounding brain parenchyma showing edema. The midline structures remain unaffected.",
+    "reference": "A mass-like abnormal signal is observed beneath the calvaria of the left temporal-occipital region, displaying isointense signals on T1W and T2W sequences, and hyperintense signal on FLAIR sequence. Within the center of the lesion, there is a small area that exhibits low signal on T1W and high signal on T2W. A large area of edema signal is present around the lesion. Post-contrast enhancement is uneven, with the solid portion of the lesion showing marked enhancement, measuring approximately 43*55*51 mm. There is no shift of midline structures.",
+    "modality_reference": "The lesion in the left temporal-occipital region displays a hyperintense signal indicating increased fluid content or possible inflammation.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00478-000",
+    "prediction": "The lesion is slightly hyperintense on FLAIR imaging, indicating increased fluid volume. There is no evidence of midline shift, and there is no significant alteration of the surrounding brain tissue.",
+    "reference": "An abnormal signal nodule is observed beneath the skull plate in the left frontal region, presenting with isointense signals on T1W and T2W sequences, slightly hyperintense on FLAIR, and showing marked enhancement on T1C, with dimensions approximately 11*14*11mm. No midline shift is detected.",
+    "modality_reference": "Slightly hyperintense nodule located beneath the skull plate in the left frontal region, with dimensions approximately 11*14*11mm. There is no reported effect on surrounding brain tissue, midline structures remain centered, and there is no information provided about the sulci, gyri, ventricles, or cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00511-000",
+    "prediction": "On FLAIR sequences, the lesion in the left frontal lobe shows a hyperintense signal, with surrounding brain edema, and there is a slight shift of midline structures to the left.",
+    "reference": "A mass-like abnormal signal is seen adjacent to the falx cerebri on the right frontal region, displaying isointense signal on T1-weighted (T1W) images and slightly hyperintense signal on T2-weighted (T2W) and FLAIR sequences. Surrounding edema is observed, with compression of the adjacent brain tissue. After contrast administration (T1C), the lesion exhibits marked but inhomogeneous enhancement, measuring approximately 43*55*52 mm. There is no midline shift detected.",
+    "modality_reference": "A lesion adjacent to the falx cerebri on the right frontal region is slightly hyperintense with perilesional edema and evidence of local compression of the adjacent brain tissue, with preserved midline anatomy.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00555-000",
+    "prediction": "The lesion in the right cerebellar hemisphere shows a slightly hyperintense signal on FLAIR sequence, with the right cerebellar hemisphere showing an irregular signal, with no noted midline shift.",
+    "reference": "A small nodule can be seen beneath the right frontal bone plate, displaying iso-intense signal on T1W and T2W sequences, slightly hyperintense on FLAIR, and significantly enhanced on T1 post-contrast (T1C), with clear boundaries, measuring approximately 11*12*7 mm. There is no shift in midline structures.",
+    "modality_reference": "On FLAIR sequences, the lesion appears slightly hyperintense, located beneath the right frontal bone plate with clear boundaries. There is no abnormal signal intensity suggesting edema in the surrounding brain tissue, and midline structures show no displacement.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00583-000",
+    "prediction": "On FLAIR sequences, the lesion in the left parietal region is hyperintense, with surrounding edema, and the midline shift is noted.",
+    "reference": "An abnormal signal nodule shadow can be seen at the base of the left anterior cranial fossa, displaying iso-signal on T1W, T2W sequences, slightly hyperintense on FLAIR, and significantly enhanced on T1C, with a clear boundary, measuring approximately 14*16*15mm. There is no shift in midline structures.",
+    "modality_reference": "The nodule at the base of the left anterior cranial fossa shows a slightly hyperintense signal on FLAIR imaging, indicating there may be a slight increase in water content or another pathology at this site. There is no observable midline shift or effacement of sulci, gyri, ventricles, or cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00608-000",
+    "prediction": "On FLAIR imaging, the lesion in the right frontal parietal lobe demonstrates hyperintense signal, indicating a possible edema or gliosis. There is no observed shift of midline structures.",
+    "reference": "Bilateral mass-like abnormal signals are observed adjacent to the falx cerebri in the frontal lobes. These lesions appear dumbbell-shaped, crossing the midline, showing iso- or low signal intensity on T1W, slightly high signal intensity on T2W and FLAIR. The lesions demonstrate obvious enhancement post-contrast (T1C), with the enhancement being uniform. The approximate size of the lesion is 69*53*59mm. There is no midline shift.",
+    "modality_reference": "On FLAIR sequence, the lesion exhibits slightly high signal intensity, with no comments about surrounding brain edema, midline shift or any compression of structures such as sulci, gyri, ventricles and cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00625-000",
+    "prediction": "On FLAIR sequence, the lesion in the left frontal lobe exhibits a mixed high and low signal intensity, suggesting a heterogeneous composition of the lesion. The size of the lesion is approximately 43*63*63mm. There is surrounding edema.",
+    "reference": "A mass-like abnormal signal is visible in the left frontal region, showing iso to low signal on T1-weighted images, mixed high and low signal on T2-weighted and FLAIR sequences, with marked and uneven enhancement on contrast-enhanced T1-weighted images. There is a cerebrospinal fluid cleft and edema band visible around the edge of the lesion, with approximate dimensions of 54*62*63mm. There is no shift in midline structures.",
+    "modality_reference": "On FLAIR sequences, the lesion in the left frontal lobe shows mixed high and low signal intensities. No midline shift is observed.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00630-000",
+    "prediction": "On FLAIR sequences, the lesion in the anterior interhemispheric fissure displays hyperintense signal. There is associated peritumoral edema and compression of the adjacent brain parenchyma.",
+    "reference": "At the midline of the anterior cranial fossa, there is a mass-like abnormal signal focus that is low signal on T1W, slightly high signal on T2W, high signal on FLAIR, and shows obvious enhancement on contrast-enhanced T1-weighted images (T1C). Surrounding the lesion, there is a non-enhanced edematous band. The dimensions of the lesion are approximately 88*70*67 mm. There is no shift of the midline structures.",
+    "modality_reference": "On FLAIR sequences, the lesion exhibits a high signal intensity, indicating the presence of fluid within or surrounding the lesion.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00648-000",
+    "prediction": "The lesion in the right frontal lobe shows a slightly hyperintense signal on FLAIR sequence, indicating the presence of edema or inflammation. The lesion is located in the right frontal lobe, with no evidence of midline shift or alteration in the midline structures.",
+    "reference": "A small nodular shadow can be seen beneath the cranial plate of the left frontal lobe, presenting with isointense signal on T1-weighted and T2-weighted imaging, slightly hyperintense on FLAIR imaging, and significant enhancement on T1 post-contrast imaging. The nodule has a clear boundary and measures approximately 11*13*6 mm. There is no midline shift.",
+    "modality_reference": "The lesion appears slightly hyperintense on FLAIR imaging, located beneath the cranial plate of the left frontal lobe, with a clear boundary and measures approximately 11x13x6 mm. There is no evidence of edema, and no impact on surrounding brain tissue or midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00688-000",
+    "prediction": "On FLAIR sequences, the lesion in the left temporal lobe exhibits high signal intensity, with surrounding brain edema and the right lateral ventricle compressed in the left.",
+    "reference": "A mass with abnormal signal intensity is observed in the left middle cranial fossa, presenting with a broad base and irregular shape. It shows isointense on both T1-weighted and T2-weighted images, slightly hyperintense on FLAIR sequence. Extensive edema signal is noted around the lesion. After contrast administration (T1C), there is significant enhancement of the lesion with the presence of the 'tail sign.' The lesion measures approximately 53 x 82 x 55 mm. Compression of the right lateral ventricle is seen, with a mild rightward shift of midline structures.",
+    "modality_reference": "On the FLAIR sequence, the lesion in the left middle cranial fossa presents slightly hyperintense signal, with extensive surrounding edema noted.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00768-000",
+    "prediction": "The lesion under the left frontal bone is slightly hyperintense on FLAIR sequences, with no midline shift.",
+    "reference": "A small abnormal signal focus can be seen beneath the skull plate in the left frontal region. It presents with isointense signals on T1W, T2W, slightly hyperintense on FLAIR, and shows significant enhancement on T1C. The size is approximately 22*31*16mm. There is no shift of midline structures.",
+    "modality_reference": "In the left frontal region, under the skull plate, the lesion appears slightly hyperintense. No additional information about edema, midline shift, or influence on surrounding structures is provided in the original report.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00774-000",
+    "prediction": "On FLAIR sequences, the lesion in the right frontal-temporal region displays a slightly hyperintense signal, with the surrounding brain parenchyma edema.",
+    "reference": "A mass-like abnormal signal shadow can be observed under the skull plate of the right frontal lobe, presenting as isointense on T1-weighted imaging, slightly hyperintense on T2-weighted and FLAIR sequences, with obvious enhancement of the lesion after contrast (T1C) and visible signs of meningeal tailing. The dimensions are approximately 43 * 51 * 49 mm, causing compression of the right lateral ventricle. There is no shift of midline structures.",
+    "modality_reference": "On FLAIR sequence, the mass-like lesion in the right frontal lobe appears slightly hyperintense with no midline shift. The sulci, gyri, ventricles, and cisterns are otherwise unremarkable, apart from the compression of the right lateral ventricle.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00777-000",
+    "prediction": "On the FLAIR sequence, the lesion in the right occipital lobe shows a slightly hyperintense signal, with no alteration of the midline structures, sulci, gyri, ventricles, and cisterns.",
+    "reference": "A mass-like abnormal signal is seen adjacent to the cerebellar tentorium in the right occipital region, exhibiting iso- to low signal on T1-weighted images, high signal on T2-weighted images, and high signal on FLAIR sequences, with significant enhancement on T1-weighted images with contrast. The boundary is clear, with approximate dimensions of 27*32*37 mm. There is no midline shift.",
+    "modality_reference": "The lesion near the cerebellar tentorium in the right occipital region is hyperintense. The boundary is clearly defined. There is no report of edema or effect on surrounding brain tissue. There are no findings relating to a midline shift or abnormalities in the sulci, gyri, ventricles, or cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00805-000",
+    "prediction": "The lesion in the left parietal lobe appears slightly hyperintense on FLAIR imaging. The size is approximately 20*30*12 mm. The midline structures remain unaffected, while the sulci, gyri, ventricles, and cisterns are slightly compressed.",
+    "reference": "A small nodular lesion is observed beneath the right frontal calvarium, which exhibits iso-intense signal on T1-weighted and T2-weighted images, slightly hyperintense signal on FLAIR sequence, and marked enhancement on T1-weighted contrast (T1C) images. The lesion has clear boundaries and measures approximately 13*11*18 mm. There is no midline shift.",
+    "modality_reference": "On FLAIR sequence, the lesion displays a slightly hyperintense signal in comparison to the surrounding brain tissue.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00825-000",
+    "prediction": "On the FLAIR sequence, the lesion in the right frontal lobe shows a slightly hyperintense signal, with surrounding brain parenchyma edema. No midline shift is observed.",
+    "reference": "A mass-like abnormal signal focus can be seen beneath the skull plate on the right frontal part, presenting with isointense on T1-weighted (T1W) and T2-weighted (T2W) images, slightly hyperintense on FLAIR sequence, and showing apparent uniform enhancement after administering gadolinium-based contrast material (T1C) with evidence of the dural tail sign, measuring approximately 34*35*51 mm. No shift in midline structures.",
+    "modality_reference": "The lesion is slightly hyperintense on FLAIR sequence. It appears well-circumscribed, and there is no midline shift or visible edema to the surrounding tissues.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00854-000",
+    "prediction": "On the FLAIR sequence, the lesion in the right frontal-parietal-temporal lobe presents with mixed high and low signal intensities. It has unclear boundaries, with some notable edema, compression of the right lateral ventricle, and a leftward shift of midline structures.",
+    "reference": "A mass-like abnormal signal is observed in the right parieto-occipital lobe and the posterior horn of the lateral ventricle. The shape is irregular with parts extending across the midline. It appears as a low signal on T1-weighted imaging, slightly hyperintense on T2-weighted and FLAIR sequences. Surrounding the lesion, there is an extensive edema signal, and after contrast administration, there is marked enhancement of the lesion which measures approximately 90*113*86 mm. The right lateral ventricle is compressed. There is a slight shift of midline structures to the left.",
+    "modality_reference": "On FLAIR sequence, the lesion in the right parieto-occipital lobe and lateral ventricle posterior horn is slightly hyperintense. The surrounding extensive signal suggests the presence of edema.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-00906-000",
+    "prediction": "On the FLAIR sequence, the lesion in the right temporal lobe exhibits a slightly hyperintense signal. There is no evidence of midline shift, and there is no evidence of alterations in sulci, gyri, ventricles, or cisterns.",
+    "reference": "A mass-like abnormal signal focus is visible in the right cerebellopontine angle region, with a broad base, compressing the brainstem and showing isointense signal on T1W and T2W sequences, slightly hyperintense on FLAIR sequence, and significant enhancement on T1C with evidence of a dural tail sign. The dimensions of the lesion are approximately 43*53*42 mm. No midline shift is observed.",
+    "modality_reference": "In the FLAIR sequence, the lesion in the right cerebellopontine angle region presents as slightly hyperintense, exerting mass effect on adjacent brainstem without displacing midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01003-008",
+    "prediction": "The lesion in the left frontal lobe presents with a slightly hyperintense signal on FLAIR sequence, with no evidence of edema or impact on surrounding brain tissue.",
+    "reference": "An abnormal signal nodule is visible below the skull plate in the left frontal region, showing isointense signal on T1W and T2W sequences, slightly hyperintense signal on FLAIR, with conspicuous enhancement after contrast (T1C), measuring approximately 14*20*16 mm. No midline shift is observed.",
+    "modality_reference": "In the left frontal region, the abnormal signal nodule below the skull plate is slightly hyperintense in signal on FLAIR sequence, with no apparent impact on surrounding brain structures. There is no shift of the midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01014-000",
+    "prediction": "On FLAIR sequences, the lesion in the anterior interhemispheric fissure shows a slightly hyperintense signal with surrounding brain tissue edema. The midline structures show slightly shifted to the right.",
+    "reference": "A mass-like abnormal signal shadow is seen on both sides of the cerebral falx in the frontal lobes. The mass crosses the midline and shows isointense signal on T1-weighted imaging, slightly hyperintense signal on T2-weighted and FLAIR imaging, and marked inhomogeneous enhancement on T1 post-contrast imaging. The size of the mass is approximately 56*51*54 mm. There is no midline shift.",
+    "modality_reference": "On FLAIR imaging, the lesion presents as slightly hyperintense relative to the surrounding brain parenchyma.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01062-000",
+    "prediction": "The lesion in the left frontal lobe appears slightly hyperintense on FLAIR sequences, with no evidence of edema or impact on surrounding brain structures.",
+    "reference": "An abnormal signal nodule is visible beneath the skull plate in the right frontal region, showing isointense on T1-weighted and T2-weighted imaging, slightly hyperintense on the FLAIR sequence, and marked enhancement upon administration of T1 contrast, measuring approximately 14*6*13 mm. There is no shift of the midline structures.",
+    "modality_reference": "A nodule exhibiting slightly hyperintense signal is present beneath the skull plate in the right frontal region on FLAIR imaging, with a size of approximately 14*6*13 mm. The midline structures are in their normal position.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01152-000",
+    "prediction": "On FLAIR sequences, the lesion in the right parietal lobe exhibits mixed high and low signal intensities. The surrounding brain tissue shows extensive edema, compression of the right lateral ventricle, and a mild shift of midline structures.",
+    "reference": "A mass-like abnormal signal can be observed beneath the skullcap in the right parietal region, presenting with iso-intense signal on T1-weighted imaging, and slightly hyperintense signal on T2-weighted and FLAIR sequences. Within the center of the lesion, there are small areas of hypo-intense signal on T1WI and hyperintense signal on T2WI. After contrast enhancement, the solid portion of the tumor enhances significantly, with presence of the dural tail sign. The dimensions are approximately 56*55*59mm. The posterior horn of the right lateral ventricle is slightly compressed, and there is no midline shift.",
+    "modality_reference": "Slight hyperintense signal of the lesion on FLAIR imaging with no effects on the midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01225-000",
+    "prediction": "The lesion in the right frontal lobe appears hyperintense on FLAIR sequences, with the surrounding brain parenchyma showing slight enhancement. The midline structures are slightly compressed.",
+    "reference": "A mass with abnormal signal intensity is seen beneath the right frontal cranial plate, with a broad base, showing isointensity to low signal on T1-weighted images, slightly hyperintense signal on T2-weighted images, and slightly hyperintense on FLAIR images. The lesion shows clear boundaries and significant enhancement after contrast administration (T1C). The dimensions of the lesion are approximately 17*29*27 mm. There is no midline shift detected.",
+    "modality_reference": "A broad-based mass beneath the right frontal cranial plate exhibits slightly hyperintense signal on FLAIR images. There is no observed compression of the adjacent brain tissue and the midline structures remain unaffected.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01231-000",
+    "prediction": "On FLAIR sequence, the lesion in the left temporal lobe is hyperintense, indicating a lesion with a high signal intensity, and there is no associated edema or midline shift in the adjacent brain tissue.",
+    "reference": "A small nodule is visible adjacent to the cerebellar tentorium on the right side, showing isointense signal on T1-weighted and T2-weighted sequences, slightly hyperintense signal on FLAIR sequences, and significant enhancement on T1-weighted contrast-enhanced sequence, with dimensions of approximately 10*11*10mm. There is no midline shift.",
+    "modality_reference": "On the FLAIR sequence, the nodule adjacent to the cerebellar tentorium on the right side shows a slightly hyperintense signal with no effect on the midline, sulci, gyri, ventricles, or cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01252-000",
+    "prediction": "The lesion in the left frontal-parietal lobe exhibits high signal intensity on FLAIR imaging, indicating a possible breakdown of the blood-brain barrier. There is no indication of midline shift or effects on the surrounding brain structures.",
+    "reference": "A mass-like abnormal signal shadow is visible beneath the left parietal bone, presenting with isointense signal on T1-weighted imaging (T1W), slightly hyperintense signal on T2-weighted imaging (T2W), and hyperintense signal on Fluid-Attenuated Inversion Recovery (FLAIR). Surrounding the lesion, edema signal is visible. The lesion shows obvious enhancement post-contrast administration (T1C) with uniform enhancement, measuring approximately 38*38*45 mm. No shift in midline structures.",
+    "modality_reference": "On FLAIR sequence, the lesion beneath the left parietal bone exhibits a hyperintense signal with surrounding edema. The standard brain structures including midline, sulci, gyri, ventricles, and cisterns appear unaffected.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01281-000",
+    "prediction": "On FLAIR sequences, the lesion in the right frontal region exhibits high signal intensity.",
+    "reference": "A mass-like abnormal signal is observed beneath the calvarial plate of the left frontal lobe, which appears isointense on T1-weighted imaging, slightly hyperintense on T2-weighted and FLAIR sequences. Peritumoral edema is visible. After enhancement, the lesion exhibits significant enhancement with dimensions approximately 28*41*31 mm. There is no shift in midline structures.",
+    "modality_reference": "On the FLAIR sequence, the lesion of the left frontal lobe presents with slightly hyperintense signaling and associated edema. No midline shift is observed.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01285-000",
+    "prediction": "The lesion in the left frontal region exhibits a slightly hyperintense signal on FLAIR imaging, with no reported effects on surrounding brain tissue, midline structures, sulci, gyri, ventricles, and cisterns.",
+    "reference": "An abnormal signal nodule can be seen under the skull plate of the left temporal pole, presenting as low signal on T1-weighted images, slightly high signal on T2-weighted and FLAIR sequences, and the lesion shows significant and uniform enhancement post T1 contrast, with clear boundaries, measuring approximately 23*20*12 mm. No midline shift is observed.",
+    "modality_reference": "On FLAIR sequence, the nodule exhibits a slightly high signal, suggesting the presence of edema or lesion-related changes. The clear boundary from surrounding brain tissue is maintained, and there is no midline shift or other abnormalities in sulci, gyri, ventricles, and cisterns.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01306-000",
+    "prediction": "The lesion on the right frontal region appears isointense on FLAIR sequence, measures approximately 12*14*22mm, and is not associated with any change to the surrounding brain tissue.",
+    "reference": "On the left side of the falx cerebri, there is a small area of abnormal signal which measures approximately 13*23*14mm. This area shows isointense signal on T1-weighted imaging (T1W), slightly hypointense signal on T2-weighted imaging (T2W), slightly hyperintense signal on FLAIR sequence, and marked enhancement following contrast administration (T1C). There is no midline shift observed.",
+    "modality_reference": "On FLAIR sequence, the lesion demonstrates slightly hyperintense signal. Similar to the T1W and T2W sequences, the report does not specify any effects on adjacent brain tissue, and there is no midline shift.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01327-000",
+    "prediction": "On FLAIR sequences, the lesion in the right frontal temporal lobe shows a mixed signal intensity.",
+    "reference": "A mass-like abnormal signal is observed beneath the cranial plate of the right frontal lobe. The lesion has a wide base, flat shape, shows slightly low signal on T1W, and slightly high signal on T2W and FLAIR. Surrounding the lesion, there is a large area of edema signal. The right lateral ventricle is slightly compressed. After administration of T1 contrast (T1C), the lesion shows significant and uniform enhancement. The nearby meninges are thickened and also enhance post-contrast. The approximate size of the lesion is 60*77*68mm. There is no midline shift.",
+    "modality_reference": "On the FLAIR sequence, there is a lesion beneath the right frontal cranial plate presenting with a slightly high signal and a large surrounding area of edema.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01350-000",
+    "prediction": "On FLAIR imaging, the lesion exhibits a slightly hyperintense signal and measures approximately 47*63*47 mm. There is no evidence of a shift of the midline structures to the right.",
+    "reference": "There is a mass-like abnormal signal adjacent to the falx cerebri on the left frontal parietal region. The shape is irregular, demonstrating isointense signal on T1-weighted images and slightly hyperintense signal on T2-weighted images. There is hyperintense signal on FLAIR imaging, with surrounding edema. Post-contrast T1-weighted images show significant and heterogeneous enhancement of the lesion, measuring approximately 46*67*55 mm. There is a slight rightward shift of midline structures.",
+    "modality_reference": "An irregular shaped mass-like lesion located adjacent to the falx cerebri in the left frontal parietal region is hyperintense on FLAIR images, with perilesional edema noted. Midline structures are slightly deviated to the right.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01368-000",
+    "prediction": "On FLAIR sequences, the lesion in the right frontal temporal lobe exhibits mixed high and low signal intensities. There is extensive edema in the surrounding brain parenchyma, and a mild leftward shift of midline structures.",
+    "reference": "Multiple clustered abnormal signal shadows are observed under the skull plates of the bilateral frontal, parietal, temporal, and occipital regions, adjacent to the falx cerebri, on the left side of the pontine-cerebellar region, and near the cerebellar tentorium. The larger lesion is located in the right temporal region with dimensions of approximately 56*63*37mm. The lesion displays isointensity on T1-weighted imaging, slightly hyperintense signal on T2-weighted imaging, with some areas within the lesion showing hypointense signal on T2-weighted imaging. After contrast enhancement (T1C), the lesion shows obvious, uniform enhancement. A small patchy abnormal signal shadow, which is hyperintense on T1-weighted and mixed signal on T2-weighted imaging, is observed adjacent to the falx cerebri in the left parietal region. This area also shows enhancement post-contrast. The right lateral ventricle is compressed. There is no displacement of midline structures.",
+    "modality_reference": "The FLAIR sequence results are not described in the original report segment provided.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01385-000",
+    "prediction": "The lesion in the right frontal lobe exhibits high signal intensity on FLAIR images. The boundaries of the lesion are indistinct, and there is a slight shift of midline structures to the right.",
+    "reference": "In the anterior cranial fossa, at the location of the cerebral falx, a mass-like abnormal signal can be observed, which grows across the midline. It presents as iso- to low signal on T1-weighted sequences, mixed high signal on T2-weighted sequences, with central low and peripheral high signal on FLAIR, and significant but uneven enhancement after contrast administration, predominantly at the periphery. Surrounding the lesion, a large area of edema is visible, measuring approximately 113*126*83 mm. There is no shift in the midline structures.",
+    "modality_reference": "The lesion exhibits a central low signal and peripheral high signal on FLAIR sequences, indicating a likely variation in tissue composition or pathology. Despite its size, there is no noted shift of midline structures.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01404-000",
+    "prediction": "On FLAIR sequences, the lesion in the left frontal lobe exhibits a hyperintense signal, with dimensions approximately 34*43*47 mm. There is no shift of midline structures.",
+    "reference": "A mass-like abnormal signal focus is observed adjacent to the falx cerebri on the left frontal-parietal region. It exhibits low signal intensity on T1-weighted imaging, slightly hyperintense signal on T2-weighted imaging, and hyperintense signal on FLAIR sequence, with clear demarcation. Post-enhancement imaging shows mild and uneven enhancement, measuring approximately 46 x 61 x 42 mm. There is a slight shift of midline structures to the right.",
+    "modality_reference": "On FLAIR sequence, the lesion demonstrates hyperintense signal with clear demarcation.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01433-000",
+    "prediction": "On FLAIR sequences, the lesion in the left temporal lobe is hyperintense, with surrounding brain tissue edema, and there is no associated midline shift.",
+    "reference": "A mass-like abnormal signal is visible in the left temporal pole, exhibiting an isointense signal on T1-weighted sequences, and hyperintense signal on T2-weighted and FLAIR sequences. Post-enhancement, nodular and patchy enhancement is seen within the lesion, and there is obvious thickening of adjacent meninges, measuring approximately 40*40*30mm. There is no midline shift.",
+    "modality_reference": "On FLAIR sequences, the lesion in the left temporal pole shows hyperintensity and measures approximately 40*40*30mm. There is no midline shift.",
+    "modal": "t2f"
+  },
+  {
+    "case_id": "BraTS-MEN-01435-001",
+    "prediction": "On FLAIR imaging, the lesion in the right temporal region is hyperintense, with no reported midline shift.",
+    "reference": "A small nodular lesion is visible at the left temporal pole, exhibiting isointense signals on T1W and T2W sequences, hyperintense on FLAIR, and showing significant enhancement on T1C, approximately 15*14*18 mm in size. Midline structures are not displaced.",
+    "modality_reference": "The lesion at the left temporal pole appears hyperintense on FLAIR imaging, with no associated midline shift.",
+    "modal": "t2f"
+  }
+]

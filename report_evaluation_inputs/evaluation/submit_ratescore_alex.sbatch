@@ -29,6 +29,7 @@ mkdir -p "$HF_HOME" results
 
 nvidia-smi
 python check_eval_env.py
+python build_autorg_baselines.py
 python build_unified_dataset.py
 python evaluate_ratescore.py \
   --input prepared/unified_case_level_reports.csv \
