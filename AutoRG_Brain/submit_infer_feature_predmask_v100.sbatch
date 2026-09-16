@@ -62,6 +62,7 @@ python infer_feature_fusion.py \
   --feature_layer 2 \
   --network_type share \
   --input_mode multi \
+  --keep_compressed \
   --fusion_type "$fusion" \
   --split test \
   --output_folder "$output_dir" \

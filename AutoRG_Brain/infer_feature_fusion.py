@@ -80,6 +80,11 @@ def parse_args():
     )
     parser.add_argument("-p", default=default_plans_identifier, required=False)
     parser.add_argument("--fp32", action="store_true", default=False)
+    parser.add_argument(
+        "--keep_compressed",
+        action="store_true",
+        help="Read preprocessed .npz files directly instead of unpacking them to .npy.",
+    )
     return parser.parse_args()
 
 
@@ -234,7 +239,7 @@ def main():
         dataset_directory=dataset_directory,
         batch_dice=batch_dice,
         stage=stage,
-        unpack_data=True,
+        unpack_data=not args.keep_compressed,
         deterministic=True,
         fp16=run_mixed_precision,
         network_type=args.network_type,
