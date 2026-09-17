@@ -53,7 +53,7 @@ echo "Output: $output_dir/pred_test.json"
 nvidia-smi
 
 python infer_feature_fusion.py \
-  3d_fullres nnUNetTrainerV2 004 0 \
+  3d_fullres nnUNetTrainerV2 Task004_llm_fusion_predmask 0 \
   -train "$train_json" \
   --plans_file "$plans" \
   --checkpoint "$checkpoint" \
