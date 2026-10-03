@@ -1,0 +1,5 @@
+# RadEval 2.2.1 bundles compatible implementations of RaTEScore,
+# RadCliQ-v1, RadGraph and BERTScore for transformers 5.x.
+radeval==2.2.1
+nltk==3.9.2
+numpy<3
