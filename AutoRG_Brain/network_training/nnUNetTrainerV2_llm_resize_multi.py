@@ -93,6 +93,10 @@ class nnUNetTrainerV2(nnUNetTrainer):
                  train_with_seg=False,avg_type='xyz',pool_to_feature_layer=None,use_conv_pool=False,use_global=True,size=4,dataset="six",max_tokens = 1024,input_mode="multi",single_modal_index=0):
         super().__init__(plans_file, fold, output_folder, dataset_directory, batch_dice, stage, unpack_data,
                          deterministic, fp16)
+        # The base trainer uses a historical fixed seed (12345). Override it
+        # here, before initialize_network() constructs any trainable modules.
+        self.random_seed = int(os.environ.get("AUTORG_RANDOM_SEED", "42"))
+        self.setup_seed(self.random_seed)
         self.max_num_epochs = 1000
         self.initial_lr = 1e-2
         self.deep_supervision_scales = None
@@ -153,7 +157,9 @@ class nnUNetTrainerV2(nnUNetTrainer):
         self.num_val_batches_per_epoch = num_val_batches_per_epoch # 50
         self.save_every = 50
 
-        self.unpack_data = True ## unpack the preprocessed .npz file to .npy file
+        # Respect the constructor option. Training keeps the historical default
+        # (True), while evaluation can read compressed .npz files directly.
+        self.unpack_data = unpack_data
         self.dataset_directory_bucket = dataset_directory_bucket
 
         self.client = None
@@ -1210,7 +1216,7 @@ class nnUNetTrainerV2(nnUNetTrainer):
                 # validation with train=False
                 self.network.eval()
                 self.llm_model.eval()
-                self.setup_seed(42)
+                self.setup_seed(self.random_seed)
 
                 val_losses = []
                 for b in range(self.num_val_batches_per_epoch):

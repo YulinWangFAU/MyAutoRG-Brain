@@ -16,7 +16,10 @@
 import argparse
 import importlib
 import os
+import random
 import sys
+import numpy as np
+import torch
 from batchgenerators.utilities.file_and_folder_operations import *
 from run.default_configuration import get_default_configuration
 from paths import default_plans_identifier
@@ -170,8 +173,27 @@ def main():
         default=None,
         help="optional experiment folder name under output_root"
     )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="random seed for Python, NumPy, PyTorch, CUDA, and the trainer"
+    )
 
     args = parser.parse_args()
+
+    # Set the seed before the trainer and its trainable fusion modules are
+    # constructed. The trainer reads AUTORG_RANDOM_SEED again after its base
+    # constructor, which historically reset the seed to 12345.
+    os.environ["AUTORG_RANDOM_SEED"] = str(args.seed)
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(args.seed)
+    if args.deterministic:
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
 
     input_mode = args.input_mode
     single_modal_index = args.single_modal_index
@@ -183,6 +205,7 @@ def main():
 
     print("[TRAIN FUSION] input_mode:", input_mode)
     print("[TRAIN FUSION] fusion_type:", args.fusion_type)
+    print("[TRAIN FUSION] random_seed:", args.seed)
 
     task = args.task
     fold = args.fold
@@ -241,6 +264,7 @@ def main():
                 f"_trainb-{args.num_batches_per_epoch}"
                 f"_valb-{args.num_val_batches_per_epoch}"
                 f"_realb-{os.environ.get('AUTORG_REAL_BATCH_SIZE', 'default')}"
+                f"_seed-{args.seed}"
             )
         output_folder_name = join(args.output_root, experiment_name)
         maybe_mkdir_p(output_folder_name)
