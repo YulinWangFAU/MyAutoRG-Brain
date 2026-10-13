@@ -189,7 +189,17 @@ It covers 3 trainable fusion methods x 5 seeds = 15 training jobs:
 - Concat-Projection
 - Token-Gated
 
-Before submitting, inspect checkpoint/output paths and confirm that each seed writes to a unique directory. The five-seed training jobs have not yet been recorded as completed in this document.
+Before submitting, inspect checkpoint/output paths and confirm that each seed writes to a unique directory.
+
+### Multi-seed training progress (updated 2026-10-13)
+
+- `Weighted-Mean`, seed `42`, completed successfully on one NVIDIA A100-SXM4-40GB.
+- Slurm job: `1837239_0`; state `COMPLETED`, exit code `0:0`.
+- Runtime: `12:56:29` for 1000 epochs.
+- Peak host RAM: approximately `107.8 GiB`; peak GPU memory: approximately `4.6 GiB`.
+- Best checkpoint: `/home/woody/iwi5/iwi5325h/autorg_runs_multiseed/train_fusion_weighted_mean_layer2_b1_train322_val46_seed42/fold_0/model_best_rouge.model`.
+- The final checkpoint was also produced, but downstream inference must use `model_best_rouge.model`.
+- The remaining array tasks `1-14` have not yet been recorded as completed. Limit concurrent tasks because host-RAM use is much larger than GPU-memory use.
 
 ## 6. Key filesystem locations
 

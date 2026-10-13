@@ -2,9 +2,9 @@
 #SBATCH --job-name=ff_multiseed
 #SBATCH --output=logs/ff_multiseed_%A_%a.out
 #SBATCH --error=logs/ff_multiseed_%A_%a.err
-#SBATCH --partition=v100
-#SBATCH --gres=gpu:v100:1
-#SBATCH --cpus-per-task=4
+#SBATCH --partition=a100
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=8
 #SBATCH --time=24:00:00
 #SBATCH --array=0-14
 #SBATCH --export=NONE
@@ -27,7 +27,7 @@ conda activate autorg
 PROJECT_DIR=/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain
 OUTPUT_ROOT=/home/woody/iwi5/iwi5325h/autorg_runs_multiseed
 TASK=Task003_llm_fusion
-TRAIN_FILE="$PROJECT_DIR/train_file.json"
+TRAIN_FILE="$PROJECT_DIR/../raw_data/Task003_llm_fusion/train_fusion_case_level.json"
 PLANS_FILE="$PROJECT_DIR/utils_file/nnUNetPlansv2.1_plans_3D.pkl"
 SEG_DIR="$PROJECT_DIR/checkpoints/AutoRG_Brain_SEG"
 SEG_PRETRAIN="$SEG_DIR/seg_model.model"
