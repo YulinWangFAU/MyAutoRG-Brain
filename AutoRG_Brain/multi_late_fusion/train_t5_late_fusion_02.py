@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on 2026/2/18 11:29
-
+t5-small
 @author: Yulin Wang
 @email: yulin.wang@fau.de
 """
 # train_t5_late_fusion_02.py
 
+import argparse
 import json
 import os
 import torch
@@ -23,17 +24,67 @@ import numpy as np
 import evaluate
 from transformers import EarlyStoppingCallback
 from transformers import set_seed
-set_seed(42)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Train the T5-Small text-fusion model reproducibly."
+    )
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--train_path",
+        default=(
+            "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/"
+            "multi_late_fusion/late_fusion_data/late_fusion_train.json"
+        ),
+    )
+    parser.add_argument(
+        "--val_path",
+        default=(
+            "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/"
+            "multi_late_fusion/late_fusion_data/late_fusion_val.json"
+        ),
+    )
+    parser.add_argument("--output_dir", default=None)
+    return parser.parse_args()
+
+
+args = parse_args()
+set_seed(args.seed)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 # ========================
 # 路径
 # ========================
 
-TRAIN_PATH = "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/late_fusion_train.json"
-VAL_PATH = "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/late_fusion_val.json"
-#OUTPUT_DIR = "/home/woody/iwi5/iwi5325h/t5_late_fusion_model"
 from datetime import datetime
+
+TRAIN_PATH = args.train_path
+VAL_PATH = args.val_path
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-OUTPUT_DIR = f"/home/woody/iwi5/iwi5325h/t5_late_fusion_model_{timestamp}"
+OUTPUT_DIR = args.output_dir or (
+    f"/home/woody/iwi5/iwi5325h/t5_late_fusion_model_{timestamp}"
+)
+
+for data_path in (TRAIN_PATH, VAL_PATH):
+    if not os.path.isfile(data_path):
+        raise FileNotFoundError(f"Missing dataset file: {data_path}")
+
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+with open(os.path.join(OUTPUT_DIR, "run_config.json"), "w") as f:
+    json.dump(
+        {
+            "model": "t5-small",
+            "seed": args.seed,
+            "train_path": TRAIN_PATH,
+            "val_path": VAL_PATH,
+            "output_dir": OUTPUT_DIR,
+            "best_model_metric": "rouge1",
+        },
+        f,
+        indent=2,
+    )
 
 # ========================
 # 读取数据
@@ -151,12 +202,14 @@ training_args = Seq2SeqTrainingArguments(
     metric_for_best_model="rouge1",
     greater_is_better=True,
     fp16=True,
-    logging_dir="/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/logs",
+    logging_dir=os.path.join(OUTPUT_DIR, "logs"),
     logging_steps=10,
     warmup_ratio=0.1,
     report_to="tensorboard",
     predict_with_generate=True,      # ✅ 现在可以写
     generation_max_length=256,       # ✅ 现在可以写
+    seed=args.seed,
+    data_seed=args.seed,
 )
 
 
@@ -184,14 +237,19 @@ trainer = Seq2SeqTrainer(
 # ========================
 
 trainer.train()
-print("Best model checkpoint:", trainer.state.best_model_checkpoint)
+best_ckpt = trainer.state.best_model_checkpoint
+best_metric = trainer.state.best_metric
+best_step = best_ckpt.split("-")[-1] if best_ckpt else "N/A"
+
+print("Best model checkpoint:", best_ckpt)
 print("Best metric:", trainer.state.best_metric)
-print("Best step:", trainer.state.best_model_checkpoint.split("-")[-1])
+print("Best step:", best_step)
 
 with open(os.path.join(OUTPUT_DIR, "best_result.txt"), "w") as f:
-    f.write(f"Best checkpoint: {trainer.state.best_model_checkpoint}\n")
-    f.write(f"Best metric: {trainer.state.best_metric}\n")
-    f.write(f"Best step: {trainer.state.best_model_checkpoint.split('-')[-1]}\n")
+    f.write(f"Seed: {args.seed}\n")
+    f.write(f"Best checkpoint: {best_ckpt}\n")
+    f.write(f"Best metric: {best_metric}\n")
+    f.write(f"Best step: {best_step}\n")
 # 保存最佳模型
 trainer.save_model(OUTPUT_DIR)
 

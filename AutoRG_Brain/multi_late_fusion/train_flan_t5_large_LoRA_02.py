@@ -6,12 +6,6 @@ flan-t5-large, LoRA
 @email: yulin.wang@fau.de
 """
 # -*- coding: utf-8 -*-
-"""
-Created on 2026/2/18 11:29
-t5-small
-@author: Yulin Wang
-@email: yulin.wang@fau.de
-"""
 # flan-t5-large
 # -*- coding: utf-8 -*-
 """
@@ -19,6 +13,7 @@ flan-t5-large + LoRA (Optimized Stable Version)
 Author: Yulin Wang
 """
 
+import argparse
 import os
 import json
 import torch
@@ -39,21 +34,65 @@ from transformers import (
 
 from peft import LoraConfig, get_peft_model, TaskType
 
-# ========================
-# Reproducibility
-# ========================
-set_seed(42)
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Train the Flan-T5-Large LoRA text-fusion model reproducibly."
+    )
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--train_path",
+        default=(
+            "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/"
+            "multi_late_fusion/late_fusion_data/late_fusion_train.json"
+        ),
+    )
+    parser.add_argument(
+        "--val_path",
+        default=(
+            "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/"
+            "multi_late_fusion/late_fusion_data/late_fusion_val.json"
+        ),
+    )
+    parser.add_argument("--output_dir", default=None)
+    return parser.parse_args()
+
+
+args = parse_args()
+set_seed(args.seed)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 # ========================
 # Paths
 # ========================
-TRAIN_PATH = "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/late_fusion_train.json"
-VAL_PATH = "/home/hpc/iwi5/iwi5325h/MyAutoRG-Brain/AutoRG_Brain/multi_late_fusion/late_fusion_data/late_fusion_val.json"
+TRAIN_PATH = args.train_path
+VAL_PATH = args.val_path
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-OUTPUT_DIR = f"/home/woody/iwi5/iwi5325h/flan_t5_large_lora_{timestamp}"
+OUTPUT_DIR = args.output_dir or (
+    f"/home/woody/iwi5/iwi5325h/flan_t5_large_lora_{timestamp}"
+)
+
+for data_path in (TRAIN_PATH, VAL_PATH):
+    if not os.path.isfile(data_path):
+        raise FileNotFoundError(f"Missing dataset file: {data_path}")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+with open(os.path.join(OUTPUT_DIR, "run_config.json"), "w") as f:
+    json.dump(
+        {
+            "model": "google/flan-t5-large",
+            "training_method": "lora",
+            "seed": args.seed,
+            "train_path": TRAIN_PATH,
+            "val_path": VAL_PATH,
+            "output_dir": OUTPUT_DIR,
+            "best_model_metric": "rouge1",
+        },
+        f,
+        indent=2,
+    )
 
 # ========================
 # Load Data
@@ -210,6 +249,8 @@ training_args = Seq2SeqTrainingArguments(
     predict_with_generate=True,
     generation_max_length=256,
     max_grad_norm=1.0,
+    seed=args.seed,
+    data_seed=args.seed,
 )
 
 # ========================
@@ -245,6 +286,7 @@ print("Best metric:", best_metric)
 print("Best step:", best_step)
 
 with open(os.path.join(OUTPUT_DIR, "best_result.txt"), "w") as f:
+    f.write(f"Seed: {args.seed}\n")
     f.write(f"Best checkpoint: {best_ckpt}\n")
     f.write(f"Best metric: {best_metric}\n")
     f.write(f"Best step: {best_step}\n")
