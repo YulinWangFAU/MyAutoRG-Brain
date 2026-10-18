@@ -271,10 +271,6 @@ trainer = Seq2SeqTrainer(
 # ========================
 # Train
 # ========================
-batch = next(iter(trainer.get_train_dataloader()))
-outputs = model(**batch)
-print("Initial loss:", outputs.loss)
-
 trainer.train()
 
 best_ckpt = trainer.state.best_model_checkpoint
