@@ -171,6 +171,19 @@ lora_config = LoraConfig(
 model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()
 
+# transformers 4.26 calls generate(input_ids, ...), while peft 0.8 exposes
+# generate(**kwargs). Adapt the call without changing generation behavior.
+peft_generate = model.generate
+
+
+def generate_compat(input_ids=None, **kwargs):
+    if input_ids is not None:
+        kwargs["input_ids"] = input_ids
+    return peft_generate(**kwargs)
+
+
+model.generate = generate_compat
+
 # ========================
 # Dataset Instances
 # ========================
