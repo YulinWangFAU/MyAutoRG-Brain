@@ -8,12 +8,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-import numpy as np
-import torch
-from peft import PeftModel
-from tqdm import tqdm
-from transformers import T5ForConditionalGeneration, T5Tokenizer, set_seed
-
 
 SEEDS = (42, 12345, 2026, 3407, 5901)
 MODELS = {
@@ -143,6 +137,14 @@ def validate_run(run_dir: Path, seed: int, uses_lora: bool) -> None:
 
 def main() -> None:
     args = parse_args()
+
+    # Keep --help and argument validation lightweight on HPC login nodes. PEFT
+    # is imported only for the two LoRA configurations below.
+    import numpy as np
+    import torch
+    from tqdm import tqdm
+    from transformers import T5ForConditionalGeneration, T5Tokenizer, set_seed
+
     config = MODELS[args.model]
     input_path = args.input or INPUTS[args.input_source]
     run_dir = args.runs_root / f"{args.model}_seed{args.seed}"
@@ -169,6 +171,8 @@ def main() -> None:
 
     tokenizer = T5Tokenizer.from_pretrained(config["base"])
     if config["lora"]:
+        from peft import PeftModel
+
         base_model = T5ForConditionalGeneration.from_pretrained(config["base"])
         base_model.config.use_cache = True
         model = PeftModel.from_pretrained(base_model, run_dir)
