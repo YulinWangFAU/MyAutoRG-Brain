@@ -15,6 +15,7 @@ import json
 import math
 import random
 import re
+import sys
 import warnings
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -165,10 +166,17 @@ def compute_radgraph(
     references: list[str], predictions: list[str], device: str, model_type: str
 ) -> list[float]:
     try:
-        # Prefer RadEval's patched RadGraph, compatible with transformers 5.x.
-        from radeval.metrics.radgraph import F1RadGraph
+        import radeval as radeval_package
     except ImportError:
+        # Fall back only when RadEval itself is unavailable.
         from radgraph import F1RadGraph
+    else:
+        # RadEval 2.2.x contains absolute imports rooted at ``RadEval`` while
+        # its installed Python package is named ``radeval``. Linux import
+        # paths are case-sensitive, so expose the installed package under the
+        # spelling expected by its vendored RadGraph implementation.
+        sys.modules.setdefault("RadEval", radeval_package)
+        from RadEval.metrics.radgraph import F1RadGraph
 
     scorer = F1RadGraph(reward_level="all", model_type=model_type, device=device)
     _, reward_list, *_ = scorer(hyps=predictions, refs=references)
