@@ -11,7 +11,7 @@ from statistics import mean, stdev
 
 
 SEEDS = (42, 12345, 2026, 3407, 5901)
-MODELS = (
+DEFAULT_MODELS = (
     "T5-Small",
     "Flan-T5-Large-LoRA",
     "Flan-T5-Large-LoRA-PullLoss",
@@ -44,13 +44,22 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=here / "results_text_fusion_multiseed_paper_metrics" / "multiseed",
     )
+    parser.add_argument(
+        "--models",
+        nargs=3,
+        default=list(DEFAULT_MODELS),
+        metavar=("MODEL_1", "MODEL_2", "MODEL_3"),
+        help="Exactly three model display names in the desired table order.",
+    )
+    parser.add_argument("--analysis-name", default="Text-fusion")
+    parser.add_argument("--output-prefix", default="text_fusion")
     return parser.parse_args()
 
 
-def read_and_validate(path: Path) -> list[dict[str, str]]:
+def read_and_validate(path: Path, models: tuple[str, ...]) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
-    expected_rows = len(MODELS) * len(INPUT_SOURCES) * len(SEEDS)
+    expected_rows = len(models) * len(INPUT_SOURCES) * len(SEEDS)
     if len(rows) != expected_rows:
         raise ValueError(f"Expected {expected_rows} seed summaries, found {len(rows)}")
 
@@ -68,7 +77,7 @@ def read_and_validate(path: Path) -> list[dict[str, str]]:
         seen.add(key)
         if row["category"] != "text_level":
             raise ValueError(f"Unexpected category for {key}: {row['category']}")
-        if row["model"] not in MODELS:
+        if row["model"] not in models:
             raise ValueError(f"Unexpected model: {row['model']}")
         if row["input_source"] not in INPUT_SOURCES:
             raise ValueError(f"Unexpected input source: {row['input_source']}")
@@ -79,7 +88,7 @@ def read_and_validate(path: Path) -> list[dict[str, str]]:
 
     expected = {
         (model, source, seed)
-        for model in MODELS
+        for model in models
         for source in INPUT_SOURCES
         for seed in SEEDS
     }
@@ -101,7 +110,12 @@ def fmt(value: float) -> str:
 
 def main() -> None:
     args = parse_args()
-    rows = read_and_validate(args.input)
+    models = tuple(args.models)
+    if len(set(models)) != 3:
+        raise ValueError("--models must contain three distinct model names")
+    if not args.output_prefix or any(char in args.output_prefix for char in "/\\"):
+        raise ValueError("--output-prefix must be a non-empty filename prefix")
+    rows = read_and_validate(args.input, models)
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     by_configuration: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
@@ -111,7 +125,7 @@ def main() -> None:
         by_seed[(row["model"], row["input_source"], int(row["seed"]))] = row
 
     aggregate_rows: list[dict[str, object]] = []
-    for model in MODELS:
+    for model in models:
         for source in INPUT_SOURCES:
             group = sorted(
                 by_configuration[(model, source)], key=lambda row: int(row["seed"])
@@ -132,7 +146,7 @@ def main() -> None:
 
     per_seed_difference_rows: list[dict[str, object]] = []
     difference_summary_rows: list[dict[str, object]] = []
-    for model in MODELS:
+    for model in models:
         for metric, label, higher_is_better in METRICS:
             differences: list[float] = []
             for seed in SEEDS:
@@ -170,10 +184,10 @@ def main() -> None:
                 }
             )
 
-    aggregate_path = args.output_dir / "text_fusion_multiseed_summary.csv"
+    aggregate_path = args.output_dir / f"{args.output_prefix}_multiseed_summary.csv"
     per_seed_path = args.output_dir / "mask_effect_per_seed.csv"
     difference_path = args.output_dir / "mask_effect_summary.csv"
-    markdown_path = args.output_dir / "text_fusion_multiseed_summary.md"
+    markdown_path = args.output_dir / f"{args.output_prefix}_multiseed_summary.md"
     write_csv(aggregate_path, aggregate_rows)
     write_csv(per_seed_path, per_seed_difference_rows)
     write_csv(difference_path, difference_summary_rows)
@@ -183,14 +197,14 @@ def main() -> None:
         for row in aggregate_rows
     }
     lines = [
-        "# Text-fusion results across five random seeds",
+        f"# {args.analysis_name} results across five random seeds",
         "",
         "Values are mean ± sample SD across seeds 42, 12345, 2026, 3407, and 5901. Each seed was evaluated on the same 92 held-out cases.",
         "",
         "| Model | Input | " + " | ".join(label for _, label, _ in METRICS) + " |",
         "|---|---|" + "---:|" * len(METRICS),
     ]
-    for model in MODELS:
+    for model in models:
         for source in INPUT_SOURCES:
             row = aggregate_lookup[(model, source)]
             values = []
@@ -209,7 +223,10 @@ def main() -> None:
     )
     markdown_path.write_text("\n".join(lines), encoding="utf-8")
 
-    print("Validated 3 models x 2 input settings x 5 seeds x 92 cases")
+    print(
+        f"Validated {len(models)} models x 2 input settings x "
+        "5 seeds x 92 cases"
+    )
     print(f"Wrote {len(aggregate_rows)} aggregate rows to {aggregate_path}")
     print(f"Wrote {len(per_seed_difference_rows)} paired seed rows to {per_seed_path}")
     print(f"Wrote {len(difference_summary_rows)} mask-effect rows to {difference_path}")

@@ -6,13 +6,14 @@ from __future__ import annotations
 import argparse
 import csv
 from collections import defaultdict
+from itertools import combinations
 from pathlib import Path
 
 import numpy as np
 
 
 SEEDS = (42, 12345, 2026, 3407, 5901)
-MODELS = (
+DEFAULT_MODELS = (
     "T5-Small",
     "Flan-T5-Large-LoRA",
     "Flan-T5-Large-LoRA-PullLoss",
@@ -26,13 +27,6 @@ METRICS = (
     ("radcliq_v1", "RadCliQ-v1", False),
     ("ratescore_pct", "RaTEScore", True),
 )
-METHOD_PAIRS = (
-    ("T5-Small", "Flan-T5-Large-LoRA"),
-    ("T5-Small", "Flan-T5-Large-LoRA-PullLoss"),
-    ("Flan-T5-Large-LoRA", "Flan-T5-Large-LoRA-PullLoss"),
-)
-
-
 def parse_args() -> argparse.Namespace:
     here = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser()
@@ -57,13 +51,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--bootstrap-iterations", type=int, default=10_000)
     parser.add_argument("--randomization-iterations", type=int, default=50_000)
     parser.add_argument("--random-seed", type=int, default=20261026)
+    parser.add_argument(
+        "--models",
+        nargs=3,
+        default=list(DEFAULT_MODELS),
+        metavar=("MODEL_1", "MODEL_2", "MODEL_3"),
+        help="Exactly three model display names; all three pairs are tested.",
+    )
+    parser.add_argument("--analysis-name", default="Text-fusion")
     return parser.parse_args()
 
 
-def load_data(path: Path) -> tuple[dict[tuple[str, str, int, str], dict[str, float]], tuple[str, ...]]:
+def load_data(
+    path: Path, models: tuple[str, ...]
+) -> tuple[dict[tuple[str, str, int, str], dict[str, float]], tuple[str, ...]]:
     with path.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
-    expected_rows = len(MODELS) * len(SOURCES) * len(SEEDS) * 92
+    expected_rows = len(models) * len(SOURCES) * len(SEEDS) * 92
     if len(rows) != expected_rows:
         raise ValueError(f"Expected {expected_rows} rows, found {len(rows)}")
     required = {"model", "input_source", "seed", "case_id"}
@@ -79,7 +83,7 @@ def load_data(path: Path) -> tuple[dict[tuple[str, str, int, str], dict[str, flo
         source = row["input_source"]
         seed = int(row["seed"])
         case_id = row["case_id"]
-        if model not in MODELS or source not in SOURCES or seed not in SEEDS:
+        if model not in models or source not in SOURCES or seed not in SEEDS:
             raise ValueError(f"Unexpected configuration: {(model, source, seed)}")
         key = (model, source, seed, case_id)
         if key in data:
@@ -89,7 +93,7 @@ def load_data(path: Path) -> tuple[dict[tuple[str, str, int, str], dict[str, flo
 
     expected_configurations = {
         (model, source, seed)
-        for model in MODELS
+        for model in models
         for source in SOURCES
         for seed in SEEDS
     }
@@ -252,12 +256,16 @@ def main() -> None:
     args = parse_args()
     if args.bootstrap_iterations < 1 or args.randomization_iterations < 1:
         raise ValueError("Iteration counts must be positive")
-    data, cases = load_data(args.input)
+    models = tuple(args.models)
+    if len(set(models)) != 3:
+        raise ValueError("--models must contain three distinct model names")
+    method_pairs = tuple(combinations(models, 2))
+    data, cases = load_data(args.input, models)
     rng = np.random.default_rng(args.random_seed)
     rows: list[dict[str, object]] = []
 
     for source in SOURCES:
-        for model_a, model_b in METHOD_PAIRS:
+        for model_a, model_b in method_pairs:
             for metric, metric_label, higher_is_better in METRICS:
                 rows.append(
                     analyze(
@@ -278,7 +286,7 @@ def main() -> None:
                     )
                 )
 
-    for model in MODELS:
+    for model in models:
         for metric, metric_label, higher_is_better in METRICS:
             rows.append(
                 analyze(
@@ -310,7 +318,7 @@ def main() -> None:
     write_csv(csv_path, rows)
 
     lines = [
-        "# Paired multi-seed text-fusion comparisons",
+        f"# Paired multi-seed {args.analysis_name} comparisons",
         "",
         "Differences are A − B. Confidence intervals use a crossed hierarchical bootstrap over five seeds and 92 cases. Two-sided p-values use case-clustered paired randomization and are Holm-adjusted within the method-comparison and mask-source families.",
         "",
@@ -335,7 +343,10 @@ def main() -> None:
         ]
     )
     md_path.write_text("\n".join(lines), encoding="utf-8")
-    print("Validated 3 models x 2 input settings x 5 seeds x 92 aligned cases")
+    print(
+        f"Validated {len(models)} models x 2 input settings x "
+        "5 seeds x 92 aligned cases"
+    )
     print(f"Wrote {len(rows)} comparisons to {csv_path}")
     print(f"Wrote report to {md_path}")
 
