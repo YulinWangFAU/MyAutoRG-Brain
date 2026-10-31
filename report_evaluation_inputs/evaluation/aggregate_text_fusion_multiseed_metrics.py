@@ -53,10 +53,17 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--analysis-name", default="Text-fusion")
     parser.add_argument("--output-prefix", default="text_fusion")
+    parser.add_argument(
+        "--category",
+        default="text_level",
+        choices=("text_level", "feature_level"),
+    )
     return parser.parse_args()
 
 
-def read_and_validate(path: Path, models: tuple[str, ...]) -> list[dict[str, str]]:
+def read_and_validate(
+    path: Path, models: tuple[str, ...], category: str
+) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
     expected_rows = len(models) * len(INPUT_SOURCES) * len(SEEDS)
@@ -75,7 +82,7 @@ def read_and_validate(path: Path, models: tuple[str, ...]) -> list[dict[str, str
         if key in seen:
             raise ValueError(f"Duplicate configuration: {key}")
         seen.add(key)
-        if row["category"] != "text_level":
+        if row["category"] != category:
             raise ValueError(f"Unexpected category for {key}: {row['category']}")
         if row["model"] not in models:
             raise ValueError(f"Unexpected model: {row['model']}")
@@ -115,7 +122,7 @@ def main() -> None:
         raise ValueError("--models must contain three distinct model names")
     if not args.output_prefix or any(char in args.output_prefix for char in "/\\"):
         raise ValueError("--output-prefix must be a non-empty filename prefix")
-    rows = read_and_validate(args.input, models)
+    rows = read_and_validate(args.input, models, args.category)
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     by_configuration: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
@@ -131,7 +138,7 @@ def main() -> None:
                 by_configuration[(model, source)], key=lambda row: int(row["seed"])
             )
             output: dict[str, object] = {
-                "category": "text_level",
+                "category": args.category,
                 "model": model,
                 "input_source": source,
                 "n_seeds": len(group),
